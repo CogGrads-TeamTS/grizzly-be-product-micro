@@ -38,3 +38,6 @@ target/*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Application Properties - DEV ONLY #
+application.properties
