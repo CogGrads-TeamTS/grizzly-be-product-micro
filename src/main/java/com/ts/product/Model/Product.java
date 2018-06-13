@@ -18,7 +18,7 @@ public class Product {
     private String name;
     private String brand;
     private String description;
-    private int price;
+    private double price;
     private long catId;
     private int discount;
     private long rating;
@@ -55,11 +55,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
