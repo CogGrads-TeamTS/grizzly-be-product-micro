@@ -8,9 +8,8 @@ spring:
         enabled: true
         service-id: config-service
       uri: http://ts.ausgrads.academy:8765/config/
-        # default mysql (localhost:3306:db_product) - credentials - user: tsuser_db, pw: password
         # config server has been set to NOT override client properties
-        # create application.properties with your mysql details if you want to override the defaults above
+        # create application.properties with your mysql details if you want to override the defaults
         # application.properties has been added to .gitignore as will only be used if working locally...
 
 server:
