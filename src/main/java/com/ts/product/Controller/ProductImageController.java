@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 public class ProductImageController {
@@ -21,9 +23,8 @@ public class ProductImageController {
         private ProductRepository productRepository;
 
         @GetMapping("/{productId}/images")
-        public Page<ProductImage> getAllImagesByProductId(@PathVariable(value = "productId") Long productId,
-                                                         Pageable pageable) {
-            return productImageRepository.findByProductId(productId, pageable);
+        public List<ProductImage> getAllImagesByProductId(@PathVariable(value = "productId") Long productId) {
+            return productImageRepository.findByProductId(productId);
         }
 
     }

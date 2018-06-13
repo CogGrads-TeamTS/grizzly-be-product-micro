@@ -9,9 +9,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 
 @Repository
-public interface ProductImageRepository extends JpaRepository<ProductImage, Long>, PagingAndSortingRepository<ProductImage, Long> {
-    Page<ProductImage> findByProductId(Long productId, Pageable pageable);
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
+    List<ProductImage> findByProductId(Long productId);
 }
