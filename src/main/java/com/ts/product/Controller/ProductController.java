@@ -19,6 +19,7 @@ import java.util.Optional;
 
 
 @RestController
+@CrossOrigin
 public class ProductController {
     @Autowired
     private CategoryClient categoryClient;
