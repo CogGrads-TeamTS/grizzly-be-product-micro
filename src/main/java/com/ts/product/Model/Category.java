@@ -7,15 +7,12 @@ public class Category {
     public Category(Long id, String name, String description, int count) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.count = count;
     }
 
     private Long id;
 
     private String name;
-
-    private String description;
 
     private int count;
 
@@ -39,11 +36,4 @@ public class Category {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

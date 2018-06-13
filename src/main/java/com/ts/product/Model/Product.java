@@ -7,6 +7,7 @@ public class Product {
     }
     private long id;
     private String name;
+    private String brand;
     private String description;
     private int price;
     private long catId;
@@ -27,6 +28,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getDescription() {
