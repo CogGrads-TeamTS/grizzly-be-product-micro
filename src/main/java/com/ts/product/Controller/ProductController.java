@@ -2,6 +2,7 @@ package com.ts.product.Controller;
 
 
 import com.ts.product.Client.CategoryClient;
+import com.ts.product.Model.Category;
 import com.ts.product.Model.Product;
 import com.ts.product.Model.ProductDetails;
 import com.ts.product.Repository.ProductImageRepository;
@@ -20,13 +21,14 @@ import java.util.Optional;
 @RestController
 public class ProductController {
     @Autowired
+    private CategoryClient categoryClient;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private ProductImageRepository productImageRepository;
 
-    @Autowired
-    private CategoryClient categoryClient;
 
 
     @GetMapping
@@ -49,6 +51,10 @@ public class ProductController {
             // set the images
             productDetails.setImages(productImageRepository.findByProductId(productDetails.getId()));
 
+            Optional<Category> cat = categoryClient.getCategory(productDetails.getCatId());
+            if (cat.isPresent()) {
+                productDetails.setCategory(cat.get());
+            }
             return new ResponseEntity<>(productDetails, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
