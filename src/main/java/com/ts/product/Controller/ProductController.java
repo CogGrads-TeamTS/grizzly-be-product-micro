@@ -33,6 +33,7 @@ public class ProductController {
     public @ResponseBody
     ResponseEntity<Iterable<Product>> getAllUsers() {
         Iterable<Product> products = productRepository.findAll( );
+
         // This returns a JSON or XML with the users
 
         return new ResponseEntity<>(products, HttpStatus.OK);
