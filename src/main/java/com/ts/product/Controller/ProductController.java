@@ -58,4 +58,10 @@ public class ProductController {
         return productRepository.findAll(pageable);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProduct(@PathVariable long id) {
+        productRepository.deleteById(id);
+
+        return new ResponseEntity("Deleted Product@{" + id + "} successfully", HttpStatus.OK);
+    }
 }
