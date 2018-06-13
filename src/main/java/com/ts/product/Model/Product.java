@@ -1,16 +1,18 @@
 package com.ts.product.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.ts.product.Repository.ProductImageRepository;
+import com.ts.product.Model.ProductImage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.*;
+import java.util.List;
+
+
 
 @Entity
 public class Product {
-    public Product()
-    {
 
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -21,6 +23,19 @@ public class Product {
     private long catId;
     private int discount;
     private long rating;
+
+    public Product(Product product) {
+        this.id = product.id;
+        this.name = product.name;
+        this.description = product.description;
+        this.price = product.price;
+        this.catId = product.catId;
+        this.discount = product.discount;
+        this.rating = product.rating;
+    }
+
+    public Product() {
+    }
 
     public long getId() {
         return id;
