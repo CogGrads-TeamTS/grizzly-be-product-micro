@@ -1,10 +1,27 @@
 package com.ts.product.Model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+
+@Entity
 public class ProductImage {
-    private long id;
-    private long product_id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String url;
     private int sort;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Product product;
 
     public long getId() {
         return id;
@@ -12,14 +29,6 @@ public class ProductImage {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(long product_id) {
-        this.product_id = product_id;
     }
 
     public String getUrl() {
@@ -37,4 +46,7 @@ public class ProductImage {
     public void setSort(int sort) {
         this.sort = sort;
     }
+
+
+
 }
