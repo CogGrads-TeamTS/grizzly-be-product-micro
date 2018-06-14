@@ -39,6 +39,7 @@ public class ProductController {
 
         // This returns a JSON or XML with the users
 
+
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -52,10 +53,12 @@ public class ProductController {
             // set the images
             productDetails.setImages(productImageRepository.findByProductId(productDetails.getId()));
 
-            Optional<Category> cat = categoryClient.getCategory(productDetails.getCatId());
-            if (cat.isPresent()) {
-                productDetails.setCategory(cat.get());
+            ResponseEntity<Category> catResponse = categoryClient.getCategory(productDetails.getCatId());
+            if (catResponse.getStatusCodeValue() == 200) {
+                productDetails.setCategory(catResponse.getBody());
+                productDetails.setCatName(catResponse.getBody().getName());
             }
+
             return new ResponseEntity<>(productDetails, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
