@@ -22,6 +22,8 @@ public class Product {
     private String brand;
     private long price;
     private long catId;
+
+    
     private String catName;
     private int discount;
     private long rating;
