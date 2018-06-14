@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -63,12 +63,22 @@ public class ProductController {
 
     @GetMapping("/")
     public Page<Product> getAllProducts(Pageable pageable) {
+        // fetch paginated products from repository
         Page<Product> products = productRepository.findAll(pageable);
 
+        // create unique array of category ids
+        Set<Long> uniqueCats = new HashSet<>();
         for (Product product : products) {
-            Optional<Category> cat = categoryClient.getCategory(product.getCatId());
-            if (cat.isPresent()) {
-                product.setCatName(cat.get().getName());
+            uniqueCats.add(product.getCatId());
+        }
+        Long[] uniqueCatsArray = uniqueCats.toArray(new Long[uniqueCats.size()]);
+
+        HashMap<Long, Category> categories = categoryClient.getCategoriesBatch(uniqueCatsArray);
+
+        for (Product product : products) {
+            if (categories.containsKey(product.getCatId())) {
+                // add the category to the product if it exists
+                product.setCatName(categories.get(product.getCatId()).getName());
             } else {
                 product.setCatName("N/A");
             }
