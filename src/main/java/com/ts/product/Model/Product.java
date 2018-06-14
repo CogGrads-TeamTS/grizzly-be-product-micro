@@ -20,7 +20,7 @@ public class Product {
     private String name;
     private String description;
     private String brand;
-    private int price;
+    private long price;
     private long catId;
     private String catName;
     private int discount;
@@ -81,11 +81,11 @@ public class Product {
 
     public void setBrand(String brand) { this.brand = brand; }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 
