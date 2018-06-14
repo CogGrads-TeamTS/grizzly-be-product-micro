@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@FeignClient(name = "category-service")
+@FeignClient(name = "category-service", decode404 = true)
 public interface CategoryClient {
 
     @GetMapping(value = "categorylist")

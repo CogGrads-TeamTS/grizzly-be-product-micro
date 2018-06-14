@@ -64,11 +64,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/")
-    public Page<Product> getAllProducts(Pageable pageable) {
-        // fetch paginated products from repository
-        Page<Product> products = productRepository.findAll(pageable);
-
+    private Page<Product> assignCategories(Page<Product> products) {
         // create unique array of category ids
         Set<Long> uniqueCats = new HashSet<>();
         for (Product product : products) {
@@ -88,6 +84,14 @@ public class ProductController {
         }
 
         return products;
+    }
+
+    @GetMapping("/")
+    public Page<Product> getAllProducts(Pageable pageable) {
+        // fetch paginated products from repository
+        Page<Product> products = productRepository.findAll(pageable);
+
+        return assignCategories(products);
     }
 
     @DeleteMapping("/{id}")
