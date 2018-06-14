@@ -2,6 +2,7 @@ package com.ts.product.Client;
 
 import com.ts.product.Model.Category;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public interface CategoryClient {
     Iterable<Category> getCategoryList();
 
     @GetMapping(value = "/{id}")
-    Optional<Category> getCategory(@PathVariable(value = "id") Long id);
+    ResponseEntity<Category> getCategory(@PathVariable(value = "id") Long id);
 
     @PostMapping(value = "/getBatch")
     @ResponseBody
