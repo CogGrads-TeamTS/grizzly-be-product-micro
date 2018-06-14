@@ -22,6 +22,7 @@ public class Product {
     private String brand;
     private int price;
     private long catId;
+    private String catName;
     private int discount;
     private long rating;
 
@@ -32,11 +33,24 @@ public class Product {
         this.brand = product.brand;
         this.price = product.price;
         this.catId = product.catId;
+        this.catName = product.catName;
         this.discount = product.discount;
         this.rating = product.rating;
     }
 
+    @Transient
+    public String getCatName() {
+        return catName;
+    }
+
+    @Transient
+    public void setCatName(String catName) {
+        this.catName = catName;
+    }
+
     public Product() {
+        this.catId = -1;
+        this.catName = "N/A";
     }
 
     public long getId() {
