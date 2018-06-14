@@ -40,6 +40,7 @@ public class ProductController {
 
         // This returns a JSON or XML with the users
 
+
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -53,20 +54,18 @@ public class ProductController {
             // set the images
             productDetails.setImages(productImageRepository.findByProductId(productDetails.getId()));
 
-            Optional<Category> cat = categoryClient.getCategory(productDetails.getCatId());
-            if (cat.isPresent()) {
-                productDetails.setCategory(cat.get());
+            ResponseEntity<Category> catResponse = categoryClient.getCategory(productDetails.getCatId());
+            if (catResponse.getStatusCodeValue() == 200) {
+                productDetails.setCategory(catResponse.getBody());
+                productDetails.setCatName(catResponse.getBody().getName());
             }
+
             return new ResponseEntity<>(productDetails, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/")
-    public Page<Product> getAllProducts(Pageable pageable) {
-        // fetch paginated products from repository
-        Page<Product> products = productRepository.findAll(pageable);
-
+    private Page<Product> assignCategories(Page<Product> products) {
         // create unique array of category ids
         Set<Long> uniqueCats = new HashSet<>();
         for (Product product : products) {
@@ -86,6 +85,14 @@ public class ProductController {
         }
 
         return products;
+    }
+
+    @GetMapping("/")
+    public Page<Product> getAllProducts(Pageable pageable) {
+        // fetch paginated products from repository
+        Page<Product> products = productRepository.findAll(pageable);
+
+        return assignCategories(products);
     }
 
     @DeleteMapping("/{id}")
