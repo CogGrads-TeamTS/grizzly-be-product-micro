@@ -63,7 +63,18 @@ public class ProductController {
 
     @GetMapping("/")
     public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+        Page<Product> products = productRepository.findAll(pageable);
+
+        for (Product product : products) {
+            Optional<Category> cat = categoryClient.getCategory(product.getCatId());
+            if (cat.isPresent()) {
+                product.setCatName(cat.get().getName());
+            } else {
+                product.setCatName("N/A");
+            }
+        }
+
+        return products;
     }
 
     @DeleteMapping("/{id}")
