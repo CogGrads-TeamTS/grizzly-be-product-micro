@@ -12,7 +12,7 @@ public class ProductImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     private String url;
     private int sort;
@@ -47,6 +47,11 @@ public class ProductImage {
         this.sort = sort;
     }
 
+    public Product getProduct() {
+        return product;
+    }
 
-
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }

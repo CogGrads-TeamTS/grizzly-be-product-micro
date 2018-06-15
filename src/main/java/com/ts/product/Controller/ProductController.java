@@ -103,6 +103,24 @@ public class ProductController {
         return assignCategories(products);
     }
 
+    @PostMapping(path="/add")
+    public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
+                                         @RequestParam long price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
+
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        product.setBrand(brand);
+        product.setPrice(price);
+        product.setCatId(catId);
+        product.setDiscount(discount);
+        product.setRating(rating);
+        productRepository.save(product);
+
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
+
     @GetMapping("/page")
     public ProductPage findBySearchTerm(@RequestParam("search") String searchTerm, Pageable pageable) {
         // fetch paginated products from repository
@@ -118,6 +136,21 @@ public class ProductController {
         productRepository.deleteById(id);
 
         return new ResponseEntity("Deleted Product@{" + id + "} successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity editProduct(@PathVariable long id, @RequestBody Product product){
+
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(!productOptional.isPresent())
+            return ResponseEntity.notFound().build();
+
+        product.setId(id);
+
+        productRepository.save(product);
+        
+        return new ResponseEntity("Updated Product @{" + id + "} successfully", HttpStatus.OK);
+
     }
 
     @GetMapping(value = "/getcatbyid")
