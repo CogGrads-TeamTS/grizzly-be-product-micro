@@ -95,6 +95,24 @@ public class ProductController {
         return assignCategories(products);
     }
 
+    @PostMapping(path="/add")
+    public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
+                                         @RequestParam long price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
+
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        product.setBrand(brand);
+        product.setPrice(price);
+        product.setCatId(catId);
+        product.setDiscount(discount);
+        product.setRating(rating);
+        productRepository.save(product);
+
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
