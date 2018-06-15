@@ -22,5 +22,5 @@ public interface CategoryClient {
 
     @PostMapping(value = "/getBatch")
     @ResponseBody
-    HashMap<Long, Category> getCategoriesBatch(@RequestBody Long[] catIds);
+    ResponseEntity<HashMap<Long, Category>> getCategoriesBatch(@RequestBody Long[] catIds);
 }

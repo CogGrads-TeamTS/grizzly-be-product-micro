@@ -5,9 +5,11 @@ import com.ts.product.Client.CategoryClient;
 import com.ts.product.Model.Category;
 import com.ts.product.Model.Product;
 import com.ts.product.Model.ProductDetails;
+import com.ts.product.Model.ProductPage;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Repository.ProductRepository;
 import com.ts.product.Service.ProductService;
+import org.aspectj.weaver.patterns.HasMemberTypePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 
@@ -27,6 +28,9 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private ProductImageRepository productImageRepository;
@@ -66,21 +70,25 @@ public class ProductController {
     }
 
     private Page<Product> assignCategories(Page<Product> products) {
+        // return if no products.
+        if (products.getTotalElements() < 1) return products;
+
         // create unique array of category ids
         Set<Long> uniqueCats = new HashSet<>();
         for (Product product : products) {
             uniqueCats.add(product.getCatId());
         }
         Long[] uniqueCatsArray = uniqueCats.toArray(new Long[uniqueCats.size()]);
-
-        HashMap<Long, Category> categories = categoryClient.getCategoriesBatch(uniqueCatsArray);
-
-        for (Product product : products) {
-            if (categories.containsKey(product.getCatId())) {
-                // add the category to the product if it exists
-                product.setCatName(categories.get(product.getCatId()).getName());
-            } else {
-                product.setCatName("N/A");
+        ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(uniqueCatsArray);
+        if (batchResponse.getStatusCodeValue() == 200) {
+            HashMap<Long, Category> categories = batchResponse.getBody();
+            for (Product product : products) {
+                if (categories.containsKey(product.getCatId())) {
+                    // add the category to the product if it exists
+                    product.setCatName(categories.get(product.getCatId()).getName());
+                } else {
+                    product.setCatName("N/A");
+                }
             }
         }
 
@@ -113,6 +121,16 @@ public class ProductController {
     }
 
 
+    @GetMapping("/page")
+    public ProductPage findBySearchTerm(@RequestParam("search") String searchTerm, Pageable pageable) {
+        // fetch paginated products from repository
+        Page<Product> products = productService.findBySearchTerm(searchTerm, pageable);
+
+        ProductPage page = new ProductPage(assignCategories(products), getDistinctCategoryId(searchTerm).getBody());
+
+        return page;
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
@@ -136,14 +154,18 @@ public class ProductController {
     }
 
     @GetMapping(value = "/getcatbyid")
-    public ResponseEntity<Optional<Category>> getDistinctCategoryId() {
-        List<Long> categoryIds = productRepository.findDistinctCategoryId();
+    public ResponseEntity<HashMap<Long, Category>> getDistinctCategoryId(String searchTerm) {
+        // used for filtering products by category on front end
+        // only returns distinct categories that contain products
+        List<Long> categoryIds = productRepository.findDistinctCategoryId(searchTerm);
 
         // fetch distinct categories in batch from categories service
         Long[] categoryIdsArray = categoryIds.toArray(new Long[categoryIds.size()]);
-        HashMap<Long, Category> categories = categoryClient.getCategoriesBatch(categoryIdsArray);
-
-
-        return new ResponseEntity(categories, HttpStatus.OK);
+        ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(categoryIdsArray);
+        if (batchResponse.getStatusCodeValue() == 200) {
+            HashMap<Long, Category> categories = batchResponse.getBody();
+            return new ResponseEntity(categories, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

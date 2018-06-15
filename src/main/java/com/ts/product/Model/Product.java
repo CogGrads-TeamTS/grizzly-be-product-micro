@@ -40,6 +40,10 @@ public class Product {
         this.rating = product.rating;
     }
 
+    public Product() {
+        this.catName = "N/A";
+    }
+
     @Transient
     public String getCatName() {
         return catName;
@@ -50,10 +54,6 @@ public class Product {
         this.catName = catName;
     }
 
-    public Product() {
-        this.catId = -1;
-        this.catName = "N/A";
-    }
 
     public long getId() {
         return id;
