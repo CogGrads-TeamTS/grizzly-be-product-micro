@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 
@@ -99,5 +100,17 @@ public class ProductController {
         productRepository.deleteById(id);
 
         return new ResponseEntity("Deleted Product@{" + id + "} successfully", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getcatbyid")
+    public ResponseEntity<Optional<Category>> getDistinctCategoryId() {
+        List<Long> categoryIds = productRepository.findDistinctCategoryId();
+
+        // fetch distinct categories in batch from categories service
+        Long[] categoryIdsArray = categoryIds.toArray(new Long[categoryIds.size()]);
+        HashMap<Long, Category> categories = categoryClient.getCategoriesBatch(categoryIdsArray);
+
+
+        return new ResponseEntity(categories, HttpStatus.OK);
     }
 }
