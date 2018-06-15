@@ -104,13 +104,12 @@ public class ProductController {
 
     @GetMapping(value = "/getcatbyid")
     public ResponseEntity<Optional<Category>> getDistinctCategoryId() {
+        List<Long> categoryIds = productRepository.findDistinctCategoryId();
 
-        List<Optional<Category>> categories = new ArrayList<>();
-        List<Long> categoryId = productRepository.findDistinctCategoryId();
+        // fetch distinct categories in batch from categories service
+        Long[] categoryIdsArray = categoryIds.toArray(new Long[categoryIds.size()]);
+        HashMap<Long, Category> categories = categoryClient.getCategoriesBatch(categoryIdsArray);
 
-        for (Long var:categoryId){
-            categories.add(categoryClient.getCategory(var));
-        }
 
         return new ResponseEntity(categories, HttpStatus.OK);
     }
