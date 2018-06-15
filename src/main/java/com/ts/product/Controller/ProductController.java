@@ -102,6 +102,21 @@ public class ProductController {
         return new ResponseEntity("Deleted Product@{" + id + "} successfully", HttpStatus.OK);
     }
 
+    @PutMapping("/edit/{id}")
+    public ResponseEntity editProduct(@PathVariable long id, @RequestBody Product product){
+
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(!productOptional.isPresent())
+            return ResponseEntity.notFound().build();
+
+        product.setId(id);
+
+        productRepository.save(product);
+        
+        return new ResponseEntity("Updated Product @{" + id + "} successfully", HttpStatus.OK);
+
+    }
+
     @GetMapping(value = "/getcatbyid")
     public ResponseEntity<Optional<Category>> getDistinctCategoryId() {
         List<Long> categoryIds = productRepository.findDistinctCategoryId();
