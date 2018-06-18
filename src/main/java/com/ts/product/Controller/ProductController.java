@@ -35,19 +35,6 @@ public class ProductController {
     @Autowired
     private ProductImageRepository productImageRepository;
 
-
-
-    @GetMapping
-    public @ResponseBody
-    ResponseEntity<Iterable<Product>> getAllUsers() {
-        Iterable<Product> products = productRepository.findAll( );
-
-        // This returns a JSON or XML with the users
-
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDetails> getProduct(@PathVariable(value = "productId") Long productId) {
         Optional<Product> product = productRepository.findById(productId);
@@ -67,14 +54,6 @@ public class ProductController {
             return new ResponseEntity<>(productDetails, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping("/")
-    public Page<Product> getAllProducts(Pageable pageable) {
-        // fetch paginated products from repository
-        Page<Product> products = productRepository.findAll(pageable);
-
-        return productService.assignCategories(products);
     }
 
     @PostMapping(path="/add")
