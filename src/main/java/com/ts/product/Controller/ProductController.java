@@ -54,6 +54,14 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping(path="/add", headers = "Content-Type=application/json") // Map ONLY GET Requests
+    public ResponseEntity addNewProduct (@RequestBody Product product) {
+
+        productRepository.save(product);
+
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
     @PostMapping(path="/add")
     public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
                                          @RequestParam long price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
