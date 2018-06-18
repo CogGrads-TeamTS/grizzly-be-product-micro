@@ -9,15 +9,13 @@ import com.ts.product.Model.ProductPage;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Repository.ProductRepository;
 import com.ts.product.Service.ProductService;
-import org.aspectj.weaver.patterns.HasMemberTypePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
+import java.util.Optional;
 
 
 @RestController
@@ -107,16 +105,16 @@ public class ProductController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity editProduct(@PathVariable long id, @RequestBody Product product){
+    public ResponseEntity editProduct(@PathVariable long id, @RequestBody Product product) {
 
         Optional<Product> productOptional = productRepository.findById(id);
-        if(!productOptional.isPresent())
+        if (!productOptional.isPresent())
             return ResponseEntity.notFound().build();
 
         product.setId(id);
 
         productRepository.save(product);
-        
+
         return new ResponseEntity("Updated Product @{" + id + "} successfully", HttpStatus.OK);
 
     }
