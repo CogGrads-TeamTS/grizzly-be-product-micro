@@ -9,14 +9,19 @@ import com.ts.product.Model.ProductPage;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Repository.ProductRepository;
 import com.ts.product.Service.ProductService;
-import org.aspectj.weaver.patterns.HasMemberTypePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -36,11 +41,10 @@ public class ProductController {
     private ProductImageRepository productImageRepository;
 
 
-
     @GetMapping
     public @ResponseBody
     ResponseEntity<Iterable<Product>> getAllUsers() {
-        Iterable<Product> products = productRepository.findAll( );
+        Iterable<Product> products = productRepository.findAll();
 
         // This returns a JSON or XML with the users
 
@@ -103,9 +107,9 @@ public class ProductController {
         return assignCategories(products);
     }
 
-    @PostMapping(path="/add")
-    public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
-                                         @RequestParam long price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
+    @PostMapping(path = "/add")
+    public ResponseEntity addNewProduct(@RequestParam String name, @RequestParam String description, @RequestParam String brand,
+                                        @RequestParam long price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
 
         Product product = new Product();
         product.setName(name);
@@ -139,16 +143,16 @@ public class ProductController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity editProduct(@PathVariable long id, @RequestBody Product product){
+    public ResponseEntity editProduct(@PathVariable long id, @RequestBody Product product) {
 
         Optional<Product> productOptional = productRepository.findById(id);
-        if(!productOptional.isPresent())
+        if (!productOptional.isPresent())
             return ResponseEntity.notFound().build();
 
         product.setId(id);
 
         productRepository.save(product);
-        
+
         return new ResponseEntity("Updated Product @{" + id + "} successfully", HttpStatus.OK);
 
     }
