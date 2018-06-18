@@ -23,8 +23,15 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
     List<Long> findDistinctCategoryId(@Param("search") String searchTerm);
 
     @Query("SELECT p FROM Product p WHERE " +
-            "LOWER(p.id) = CONCAT('',:search,'') OR " +
+            "(LOWER(p.id) = CONCAT('',:search,'') OR " +
             "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
-            "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%'))")
+            "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%'))) AND " +
+            "LOWER(p.catId) = :catId")
+    Page<Product> findBySearchTermCategory(@Param("search") String searchTerm, Pageable pageable, @Param("catId") Long categoryId);
+
+    @Query("SELECT p FROM Product p WHERE " +
+            "(LOWER(p.id) = CONCAT('',:search,'') OR " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
+            "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%')))")
     Page<Product> findBySearchTerm(@Param("search") String searchTerm, Pageable pageable);
 }
