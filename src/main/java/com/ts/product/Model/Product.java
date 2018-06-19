@@ -23,7 +23,7 @@ public class Product {
     private long price;
     private long catId;
 
-    
+    @Transient
     private String catName;
     private int discount;
     private long rating;

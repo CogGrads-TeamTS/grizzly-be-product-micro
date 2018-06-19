@@ -1,6 +1,7 @@
 package com.ts.product.Controller;
 
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.ts.product.Client.CategoryClient;
 import com.ts.product.Model.Category;
 import com.ts.product.Model.Product;
@@ -9,12 +10,15 @@ import com.ts.product.Model.ProductPage;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Repository.ProductRepository;
 import com.ts.product.Service.ProductService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.Optional;
 
 
@@ -88,7 +92,6 @@ public class ProductController {
             // fetch paginated products from repository with filtered category
             products = productService.findBySearchTermCategory(searchTerm, pageable, categoryId.get());
         } else {
-            System.out.println("category id not passed");
             products = productService.findBySearchTerm(searchTerm, pageable);
         }
 
@@ -116,6 +119,19 @@ public class ProductController {
         productRepository.save(product);
 
         return new ResponseEntity("Updated Product @{" + id + "} successfully", HttpStatus.OK);
+    }
 
+    @GetMapping("/categories/count/{catId}")
+    public ResponseEntity productCount(@PathVariable long catId) {
+        // return the count of products in a category.
+        Long count = productRepository.categoryProductCount(catId);
+
+        JSONObject countObj = new JSONObject();
+        countObj.put("count", count);
+
+        JSONObject o = new JSONObject();
+        o.put(catId, countObj);
+
+        return new ResponseEntity(count, HttpStatus.OK);
     }
 }
