@@ -44,17 +44,22 @@ public class ProductServiceImpl implements ProductService {
             uniqueCats.add(product.getCatId());
         }
         Long[] uniqueCatsArray = uniqueCats.toArray(new Long[uniqueCats.size()]);
-        ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(uniqueCatsArray);
-        if (batchResponse.getStatusCodeValue() == 200) {
-            HashMap<Long, Category> categories = batchResponse.getBody();
-            for (Product product : products) {
-                if (categories.containsKey(product.getCatId())) {
-                    // add the category to the product if it exists
-                    product.setCatName(categories.get(product.getCatId()).getName());
-                } else {
-                    product.setCatName("N/A");
+
+        try {
+            ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(uniqueCatsArray);
+            if (batchResponse.getStatusCodeValue() == 200) {
+                HashMap<Long, Category> categories = batchResponse.getBody();
+                for (Product product : products) {
+                    if (categories.containsKey(product.getCatId())) {
+                        // add the category to the product if it exists
+                        product.setCatName(categories.get(product.getCatId()).getName());
+                    } else {
+                        product.setCatName("N/A");
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return products;
@@ -69,10 +74,14 @@ public class ProductServiceImpl implements ProductService {
 
         // fetch distinct categories in batch from categories service
         Long[] categoryIdsArray = categoryIds.toArray(new Long[categoryIds.size()]);
-        ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(categoryIdsArray);
-        if (batchResponse.getStatusCodeValue() == 200) {
-            HashMap<Long, Category> categories = batchResponse.getBody();
-            return new ResponseEntity(categories, HttpStatus.OK);
+        try {
+            ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(categoryIdsArray);
+            if (batchResponse.getStatusCodeValue() == 200) {
+                HashMap<Long, Category> categories = batchResponse.getBody();
+                return new ResponseEntity(categories, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
