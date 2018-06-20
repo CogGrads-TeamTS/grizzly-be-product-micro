@@ -63,6 +63,16 @@ public class ProductController {
 
         productRepository.save(product);
 
+        try {
+            ResponseEntity<Category> categoryResponse = categoryClient.getCategory(product.getCatId());
+
+            if (categoryResponse.getStatusCodeValue() == 200) {
+                product.setCatName(categoryResponse.getBody().getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
@@ -79,6 +89,8 @@ public class ProductController {
         product.setDiscount(discount);
         product.setRating(rating);
         productRepository.save(product);
+
+
 
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
