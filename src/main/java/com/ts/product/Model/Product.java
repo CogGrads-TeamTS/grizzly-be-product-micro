@@ -1,5 +1,6 @@
 package com.ts.product.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Model.ProductImage;
 
@@ -20,7 +21,10 @@ public class Product {
     private String name;
     private String description;
     private String brand;
+
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Long price;
+
     private long catId;
 
     @Transient
