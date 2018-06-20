@@ -23,7 +23,7 @@ public class Product {
     private String brand;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    private Long price;
+    private Float price;
 
     private long catId;
 
@@ -87,11 +87,11 @@ public class Product {
 
     public void setBrand(String brand) { this.brand = brand; }
 
-    public Long getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
