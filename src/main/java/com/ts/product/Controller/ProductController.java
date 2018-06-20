@@ -60,20 +60,9 @@ public class ProductController {
 
     @PostMapping(path="/add", headers = "Content-Type=application/json") // Map ONLY GET Requests
     public ResponseEntity addNewProduct (@RequestBody Product product) {
-
         productRepository.save(product);
 
-        try {
-            ResponseEntity<Category> categoryResponse = categoryClient.getCategory(product.getCatId());
-
-            if (categoryResponse.getStatusCodeValue() == 200) {
-                product.setCatName(categoryResponse.getBody().getName());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+        return new ResponseEntity<>(productService.assignCategory(product), HttpStatus.CREATED);
     }
 
     @PostMapping(path="/add")
@@ -90,9 +79,7 @@ public class ProductController {
         product.setRating(rating);
         productRepository.save(product);
 
-
-
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+        return new ResponseEntity<>(productService.assignCategory(product), HttpStatus.CREATED);
     }
 
 

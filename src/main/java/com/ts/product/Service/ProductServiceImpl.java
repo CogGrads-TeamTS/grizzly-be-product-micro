@@ -34,6 +34,19 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findBySearchTermCategory(searchTerm, pageable, categoryId);
     }
 
+    public Product assignCategory(Product product) {
+        try {
+            ResponseEntity<Category> categoryResponse = categoryClient.getCategory(product.getCatId());
+
+            if (categoryResponse.getStatusCodeValue() == 200) {
+                product.setCatName(categoryResponse.getBody().getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return product;
+    }
+
     public Page<Product> assignCategories(Page<Product> products) {
         // return if no products.
         if (products.getTotalElements() < 1) return products;
