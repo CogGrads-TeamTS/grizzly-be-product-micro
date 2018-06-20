@@ -68,7 +68,7 @@ public class ProductController {
 
     @PostMapping(path="/add")
     public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
-                                         @RequestParam Long price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
+                                         @RequestParam Float price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
 
         Product product = new Product();
         product.setName(name);
