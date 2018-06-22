@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Model.ProductImage;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -23,7 +26,8 @@ public class Product {
     private String brand;
 
     @JoinColumn(name="product_id")
-    @ManyToOne(targetEntity=ProductImage.class,fetch=FetchType.LAZY)
+    @OneToMany(targetEntity=ProductImage.class,fetch=FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
     private List<ProductImage> images;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
