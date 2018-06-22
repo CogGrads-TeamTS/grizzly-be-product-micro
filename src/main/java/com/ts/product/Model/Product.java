@@ -22,6 +22,10 @@ public class Product {
     private String description;
     private String brand;
 
+    @JoinColumn(name="product_id")
+    @ManyToOne(targetEntity=ProductImage.class,fetch=FetchType.LAZY)
+    private List<ProductImage> images;
+
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Float price;
 
@@ -58,6 +62,13 @@ public class Product {
         this.catName = catName;
     }
 
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
+    }
 
     public long getId() {
         return id;
