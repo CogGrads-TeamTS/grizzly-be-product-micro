@@ -18,6 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -102,6 +107,19 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
+
+        Path dir;
+        String pattern = id + "-*";
+
+        dir = Paths.get("data/images/");
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, pattern)) {
+            for (Path path : stream) {
+                Files.delete(path.toAbsolutePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return new ResponseEntity("Deleted Product@{" + id + "} successfully", HttpStatus.OK);
     }
