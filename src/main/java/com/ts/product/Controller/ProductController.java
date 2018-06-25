@@ -13,6 +13,7 @@ import com.ts.product.Service.ProductService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -87,6 +89,12 @@ public class ProductController {
         return new ResponseEntity<>(productService.assignCategory(product), HttpStatus.CREATED);
     }
 
+
+    //    Method used for the global search to find categories by name
+    @GetMapping(value = "/allByLen")
+    public List<Product> getAllProductsByLen(int size, String search){
+        return productService.findNameBySearchTerm(search, new PageRequest(0, size)).getContent();
+    }
 
     @GetMapping("/page")
     public ProductPage findBySearchTerm(@RequestParam("search") String searchTerm, Pageable pageable, @RequestParam("category") Optional<Long> categoryId) {
