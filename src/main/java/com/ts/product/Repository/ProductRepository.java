@@ -35,6 +35,10 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
             "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%')))")
     Page<Product> findBySearchTerm(@Param("search") String searchTerm, Pageable pageable);
 
+    @Query("SELECT p FROM Product p WHERE " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))")
+    Page<Product> findNameBySearchTerm(@Param("search") String searchTerm, Pageable pageable);
+
     @Query("SELECT COUNT(p.id) FROM Product p WHERE p.catId = :catId")
     Long categoryProductCount(@Param("catId") Long catId);
 }
