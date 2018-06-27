@@ -17,9 +17,13 @@ public class ProductPage {
     private List<String> filterBrands;
     private List<Integer> filterRatings;
 
-    public ProductPage(Page<Product> products, HashMap<Long, Category> filterCats) {
-        this.products = products;
+    public void setFilterCats(HashMap<Long, Category> filterCats) {
         this.filterCats = filterCats;
+    }
+
+    public ProductPage(Page<Product> products) {
+        this.products = products;
+
     }
 
     public List<Integer> getFilterRatings() {

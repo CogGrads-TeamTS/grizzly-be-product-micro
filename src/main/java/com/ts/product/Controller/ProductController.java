@@ -111,16 +111,22 @@ public class ProductController {
             products = productService.findBySearchTerm(searchTerm, pageable);
         }
 
-        ProductPage page = new ProductPage(productService.assignCategories(products), productService.distinctCategoriesFilter(searchTerm).getBody());
+        // assign categories to pagination objects
+        products = productService.assignCategories(products);
 
-        ResponseEntity<List<String>> brands = productService.distinctBrandsFilter(searchTerm);
-        if (brands.getStatusCodeValue() == 200) {
-            page.setFilterBrands(brands.getBody());
-        }
+        // create product page
+        ProductPage page = new ProductPage(products);
 
-        ResponseEntity<List<Integer>> ratings = productService.distinctRatingsFilter(searchTerm);
-        if (ratings.getStatusCodeValue() == 200) {
-            page.setFilterRatings(ratings.getBody());
+        ResponseEntity<HashMap<String, Object>> filterResponse = productService.distinctFilters(searchTerm);
+        if (filterResponse.getStatusCodeValue() == 200) {
+            HashMap<String, Object> filters = filterResponse.getBody();
+            List<Integer> filterRatings = (List<Integer>) filters.get("ratings");
+            List<String> filterBrands = (List<String>) filters.get("brands");
+            HashMap<Long, Category> filterCategories = (HashMap<Long, Category>) filters.get("categories");
+
+            page.setFilterRatings(filterRatings);
+            page.setFilterBrands(filterBrands);
+            page.setFilterCats(filterCategories);
         }
 
         return page;
