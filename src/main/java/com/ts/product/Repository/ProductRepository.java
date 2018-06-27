@@ -18,6 +18,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends CrudRepository<Product, Long>, PagingAndSortingRepository<Product, Long> {
 
+    // somewhat optimises as doesn't grab duplicate products that have same brand,catId and rating in the same record.
     @Query("SELECT DISTINCT p.brand, p.catId, p.rating from Product p WHERE " +
             "LOWER(p.id) = CONCAT('',:search,'') OR " +
             "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
