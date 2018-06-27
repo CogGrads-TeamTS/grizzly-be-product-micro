@@ -110,18 +110,23 @@ public class ProductController {
             // fetch paginated products from repository with filtered category
             products = productService.findBySearchTermCategory(searchTerm, pageable, categoryId.get());
         }
-        else if (brand.isPresent()) {
+        else {
+            products = productService.findBySearchTerm(searchTerm, pageable);
+        }
+        if (brand.isPresent()) {
             // fetch paginated products from repository with filtered category
             products = productService.findBySearchTermBrand(searchTerm, pageable, brand.get());
         }
-        else if (rating.isPresent()) {
+        else {
+            products = productService.findBySearchTerm(searchTerm, pageable);
+        }
+        if (rating.isPresent()) {
             // fetch paginated products from repository with filtered category
             products = productService.findBySearchTermRating(searchTerm, pageable, rating.get());
         }
         else {
             products = productService.findBySearchTerm(searchTerm, pageable);
         }
-
         // assign categories to pagination objects
         products = productService.assignCategories(products);
 
