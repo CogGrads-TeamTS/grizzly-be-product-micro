@@ -90,15 +90,12 @@ public class ProductServiceImpl implements ProductService {
             String brand = (String) filter[0];
             long catId = (long) filter[1];
             int rating = (int) filter[2];
-            brands.add(brand);
-            ratings.add(rating);
-            categoryIds.add(catId);
-            System.out.println(brand);
-            System.out.println(catId);
-            System.out.println(rating);
+            if (!brands.contains(brand)) brands.add(brand);
+            if (!ratings.contains(rating)) ratings.add(rating);
+            if (!categoryIds.contains(catId)) categoryIds.add(catId);
         }
 
-        // fetch category objects from category microservice
+        // fetch category objects from category micro service
         Long[] categoryIdsArray = categoryIds.toArray(new Long[categoryIds.size()]);
         HashMap<Long, Category> categories = new HashMap<>();
         try {
