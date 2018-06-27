@@ -15,10 +15,19 @@ public class ProductPage {
     private Page<Product> products;
     private HashMap<Long, Category> filterCats;
     private List<String> filterBrands;
+    private List<Integer> filterRatings;
 
     public ProductPage(Page<Product> products, HashMap<Long, Category> filterCats) {
         this.products = products;
         this.filterCats = filterCats;
+    }
+
+    public List<Integer> getFilterRatings() {
+        return filterRatings;
+    }
+
+    public void setFilterRatings(List<Integer> filterRatings) {
+        this.filterRatings = filterRatings;
     }
 
     public void setFilterBrands(List<String> filterBrands) {

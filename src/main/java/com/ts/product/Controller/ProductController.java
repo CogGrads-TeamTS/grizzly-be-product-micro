@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
@@ -48,13 +47,6 @@ public class ProductController {
     @Autowired
     private ProductImageRepository productImageRepository;
 
-    @GetMapping("/authCheck")
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> getProductOauth(Principal principal) {
-        OAuth2Authentication authentication = (OAuth2Authentication) principal;
-        Map<String, Object> user = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
-        return user;
-    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDetails> getProduct(@PathVariable(value = "productId") Long productId) {
@@ -86,7 +78,7 @@ public class ProductController {
 
     @PostMapping(path="/add")
     public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
-                                         @RequestParam Float price, @RequestParam int catId, @RequestParam int discount, @RequestParam long rating) {
+                                         @RequestParam Float price, @RequestParam int catId, @RequestParam int discount, @RequestParam int rating) {
 
         Product product = new Product();
         product.setName(name);
@@ -125,7 +117,11 @@ public class ProductController {
         if (brands.getStatusCodeValue() == 200) {
             page.setFilterBrands(brands.getBody());
         }
-        page.setFilterBrands(productService.distinctBrandsFilter(searchTerm).getBody());
+
+        ResponseEntity<List<Integer>> ratings = productService.distinctRatingsFilter(searchTerm);
+        if (ratings.getStatusCodeValue() == 200) {
+            page.setFilterRatings(ratings.getBody());
+        }
 
         return page;
     }

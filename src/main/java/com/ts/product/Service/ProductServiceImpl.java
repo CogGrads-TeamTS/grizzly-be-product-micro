@@ -84,6 +84,12 @@ public class ProductServiceImpl implements ProductService {
         return new ResponseEntity(brandNames, HttpStatus.OK);
     }
 
+    public ResponseEntity<List<Integer>> distinctRatingsFilter(String searchTerm) {
+        List<Integer> ratings = productRepository.findDistinctRatings(searchTerm);
+        if (ratings.size() < 1) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity(ratings, HttpStatus.OK);
+    }
+
     public ResponseEntity<HashMap<Long, Category>> distinctCategoriesFilter(String searchTerm) {
         // used for filtering products by category on front end
         // only returns distinct categories that contain products
