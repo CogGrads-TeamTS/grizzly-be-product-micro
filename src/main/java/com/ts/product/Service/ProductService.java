@@ -16,4 +16,5 @@ public interface ProductService {
     Product assignCategory(Product product);
     ResponseEntity<List<String>> distinctBrandsFilter(String searchTerm);
     ResponseEntity<HashMap<Long, Category>> distinctCategoriesFilter(String searchTerm);
+    Page<Product> findNameBySearchTerm(String searchTerm, Pageable pageable);
 }

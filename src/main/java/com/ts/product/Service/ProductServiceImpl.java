@@ -104,4 +104,8 @@ public class ProductServiceImpl implements ProductService {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    public Page<Product> findNameBySearchTerm(String searchTerm, Pageable pageable){
+        return productRepository.findNameBySearchTerm(searchTerm, pageable);
+    }
 }
