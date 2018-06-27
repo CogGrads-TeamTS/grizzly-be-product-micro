@@ -101,13 +101,24 @@ public class ProductController {
     }
 
     @GetMapping("/page")
-    public ProductPage findBySearchTerm(@RequestParam("search") String searchTerm, Pageable pageable, @RequestParam("category") Optional<Long> categoryId) {
+    public ProductPage findBySearchTerm(@RequestParam("search") String searchTerm, Pageable pageable,
+                                        @RequestParam("category") Optional<Long> categoryId,  @RequestParam("brand") Optional<String> brand,
+                                        @RequestParam("rating") Optional<Integer> rating) {
         Page<Product> products;
 
         if (categoryId.isPresent()) {
             // fetch paginated products from repository with filtered category
             products = productService.findBySearchTermCategory(searchTerm, pageable, categoryId.get());
-        } else {
+        }
+        else if (brand.isPresent()) {
+            // fetch paginated products from repository with filtered category
+            products = productService.findBySearchTermBrand(searchTerm, pageable, brand.get());
+        }
+        else if (rating.isPresent()) {
+            // fetch paginated products from repository with filtered category
+            products = productService.findBySearchTermRating(searchTerm, pageable, rating.get());
+        }
+        else {
             products = productService.findBySearchTerm(searchTerm, pageable);
         }
 
