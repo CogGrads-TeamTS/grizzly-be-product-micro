@@ -22,7 +22,7 @@ public class Product {
     private long id;
 
     private String name;
-    @Column(length = 1000)
+    @Column(length = 1000, columnDefinition = "varchar(1000)")
     private String description;
     private String brand;
 
@@ -39,7 +39,7 @@ public class Product {
     @Transient
     private String catName;
     private int discount;
-    private long rating;
+    private int rating;
 
     public Product(Product product) {
         this.id = product.id;
@@ -127,11 +127,11 @@ public class Product {
         this.discount = discount;
     }
 
-    public long getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(long rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 }
