@@ -22,6 +22,7 @@ public class Product {
     private long id;
 
     private String name;
+    @Column(length = 1000)
     private String description;
     private String brand;
 
