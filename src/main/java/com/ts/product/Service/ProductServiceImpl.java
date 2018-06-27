@@ -3,6 +3,7 @@ package com.ts.product.Service;
 import com.ts.product.Client.CategoryClient;
 import com.ts.product.Model.Category;
 import com.ts.product.Model.Product;
+import com.ts.product.Model.ProductFilter;
 import com.ts.product.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,10 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.xml.ws.Response;
+import java.util.*;
 
 @Service
 @Transactional
@@ -78,37 +77,46 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
-    public ResponseEntity<List<String>> distinctBrandsFilter(String searchTerm) {
-        List<String> brandNames = productRepository.findDistinctBrandNames(searchTerm);
-        if (brandNames.size() < 1) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity(brandNames, HttpStatus.OK);
-    }
+    public ResponseEntity<HashMap<String, Object>> distinctFilters(String searchTerm) {
+        // DISTINCT BULK FILTER
+        List<Object[]> filterQuery = productRepository.findDistinctFilters(searchTerm);
+        List<String> brands = new ArrayList<>();
+        List<Integer> ratings = new ArrayList<>();
+        List<Long> categoryIds = new ArrayList<>();
+        //System.out.println(filters);
 
-    public ResponseEntity<List<Integer>> distinctRatingsFilter(String searchTerm) {
-        List<Integer> ratings = productRepository.findDistinctRatings(searchTerm);
-        if (ratings.size() < 1) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity(ratings, HttpStatus.OK);
-    }
+        // add objects to individual lists
+        for (Object[] filter: filterQuery) {
+            String brand = (String) filter[0];
+            long catId = (long) filter[1];
+            int rating = (int) filter[2];
+            brands.add(brand);
+            ratings.add(rating);
+            categoryIds.add(catId);
+            System.out.println(brand);
+            System.out.println(catId);
+            System.out.println(rating);
+        }
 
-    public ResponseEntity<HashMap<Long, Category>> distinctCategoriesFilter(String searchTerm) {
-        // used for filtering products by category on front end
-        // only returns distinct categories that contain products
-        List<Long> categoryIds = productRepository.findDistinctCategoryId(searchTerm);
-
-        if (categoryIds.size() < 1) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        // fetch distinct categories in batch from categories service
+        // fetch category objects from category microservice
         Long[] categoryIdsArray = categoryIds.toArray(new Long[categoryIds.size()]);
+        HashMap<Long, Category> categories = new HashMap<>();
         try {
             ResponseEntity<HashMap<Long, Category>> batchResponse = categoryClient.getCategoriesBatch(categoryIdsArray);
             if (batchResponse.getStatusCodeValue() == 200) {
-                HashMap<Long, Category> categories = batchResponse.getBody();
-                return new ResponseEntity(categories, HttpStatus.OK);
+                categories.putAll(batchResponse.getBody());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        HashMap<String, Object> filters = new HashMap<>();
+        if (brands.size() > 0) filters.put("brands", brands);
+        if (ratings.size() > 0) filters.put("ratings", ratings);
+        if (categories.size() > 0) filters.put("categories", categories);
+
+        return (filters.size() > 0) ?
+                new ResponseEntity(filters, HttpStatus.OK): new ResponseEntity<>(HttpStatus.NOT_FOUND) ;
     }
 
     public Page<Product> findNameBySearchTerm(String searchTerm, Pageable pageable){
