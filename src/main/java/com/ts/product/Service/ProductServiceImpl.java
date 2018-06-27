@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
             String brand = (String) filter[0];
             long catId = (long) filter[1];
             int rating = (int) filter[2];
-            if (!brands.contains(brand)) brands.add(brand);
+            if (!brands.contains(brand) && brand != null) brands.add(brand);
             if (!ratings.contains(rating)) ratings.add(rating);
             if (!categoryIds.contains(catId)) categoryIds.add(catId);
         }
