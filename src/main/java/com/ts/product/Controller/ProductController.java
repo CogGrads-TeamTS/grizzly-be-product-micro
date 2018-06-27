@@ -16,14 +16,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -41,6 +46,14 @@ public class ProductController {
 
     @Autowired
     private ProductImageRepository productImageRepository;
+
+    @GetMapping("/authCheck")
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getProductOauth(Principal principal) {
+        OAuth2Authentication authentication = (OAuth2Authentication) principal;
+        Map<String, Object> user = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
+        return user;
+    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDetails> getProduct(@PathVariable(value = "productId") Long productId) {
@@ -100,6 +113,12 @@ public class ProductController {
         }
 
         ProductPage page = new ProductPage(productService.assignCategories(products), productService.distinctCategoriesFilter(searchTerm).getBody());
+
+        ResponseEntity<List<String>> brands = productService.distinctBrandsFilter(searchTerm);
+        if (brands.getStatusCodeValue() == 200) {
+            page.setFilterBrands(brands.getBody());
+        }
+        page.setFilterBrands(productService.distinctBrandsFilter(searchTerm).getBody());
 
         return page;
     }

@@ -22,6 +22,12 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
             "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%'))")
     List<Long> findDistinctCategoryId(@Param("search") String searchTerm);
 
+    @Query("SELECT DISTINCT p.brand from Product p WHERE " +
+            "LOWER(p.id) = CONCAT('',:search,'') OR " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
+            "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%'))")
+    List<String> findDistinctBrandNames(@Param("search") String searchTerm);
+
     @Query("SELECT p FROM Product p WHERE " +
             "(LOWER(p.id) = CONCAT('',:search,'') OR " +
             "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
