@@ -64,31 +64,23 @@ public class ProductImageController {
             return new ResponseEntity("Image added to product: " + productId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/edit/{productId}/image")
-    public ResponseEntity editProductImage(@RequestParam ProductImage image) {
+    @PutMapping("/edit/{productId}/images")
+    public ResponseEntity editProductImage(@RequestParam long id, String url, int sort) {
+
+        ProductImage temp = productImageRepository.getOne(id);
 
         /**
-         * Check if the sort is the same
-         * return and do nothing
-         * else update sort value
+         * If Image is the same don't change anything and return
+         * else update the database with the new sort value
          */
-
-        ProductImage temp = productImageRepository.getOne(image.getId());
-
-        /**
-         * If Image is the same
-         */
-        if(temp.getSort() == image.getSort()) {
-            return new ResponseEntity("Updated Product @{" + image.getId() + "} successfully", HttpStatus.OK);
+        if(temp.getSort() == sort) {
+            return new ResponseEntity("Updated Product @{" + id + "} successfully", HttpStatus.OK);
         } else {
-            /**
-             * set the sort and save the image i think..
-             */
-            temp.setSort(image.getSort());
+            temp.setSort(sort);
             productImageRepository.save(temp);
         }
 
-        return new ResponseEntity("Updated Product @{" + image.getId() + "}  with sort @{" + image.getSort()+ "} successfully", HttpStatus.OK);
+        return new ResponseEntity("Updated Product @{" + id + "}  with sort @{" + sort + "} successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/image/delete")
