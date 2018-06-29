@@ -67,32 +67,36 @@ public class ProductImageController {
     @PutMapping("/edit/{productId}/image")
     public ResponseEntity editProductImage(@RequestParam ProductImage image) {
 
-        Path dir;
-        dir = Paths.get("data/images/");
-
         /**
          * Check if the sort is the same
          * return and do nothing
          * else update sort value
          */
-//        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, pattern)) {
-//            for (Path path : stream) {
-//                Files.delete(path.toAbsolutePath());
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        //ResponseEntity fileSavedResponse = productImageService.singleFileUploadSave(productId, file);
 
-        return new ResponseEntity("test", HttpStatus.OK);
+        ProductImage temp = productImageRepository.getOne(image.getId());
+
+        /**
+         * If Image is the same
+         */
+        if(temp.getSort() == image.getSort()) {
+            return new ResponseEntity("Updated Product @{" + image.getId() + "} successfully", HttpStatus.OK);
+        } else {
+            /**
+             * set the sort and save the image i think..
+             */
+            temp.setSort(image.getSort());
+            productImageRepository.save(temp);
+        }
+
+        return new ResponseEntity("Updated Product @{" + image.getId() + "}  with sort @{" + image.getSort()+ "} successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/image/delete")
-    public ResponseEntity deleteImage(@RequestBody ProductImage image) {
-        productImageRepository.deleteById(image.getId());
+    public ResponseEntity deleteImage(@RequestParam long id, String url) {
+        productImageRepository.deleteById(id);
 
         Path dir;
-        String pattern = image.getUrl();
+        String pattern = url;
 
         dir = Paths.get("data/images/");
 
@@ -104,7 +108,7 @@ public class ProductImageController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity("Deleted Product@{" + image.getUrl() + "} successfully", HttpStatus.OK);
+        return new ResponseEntity("Deleted Product@{" + url + "} successfully", HttpStatus.OK);
 
 
     }
