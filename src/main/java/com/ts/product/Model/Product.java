@@ -27,7 +27,7 @@ public class Product {
     private String brand;
 
     @JoinColumn(name="product_id")
-    @OneToMany(targetEntity=ProductImage.class,fetch=FetchType.LAZY)
+    @OneToMany(targetEntity=ProductImage.class,fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.SELECT)
     private List<ProductImage> images;
 
