@@ -87,8 +87,8 @@ public class ProductImageController {
         return new ResponseEntity("test", HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{productId}/image")
-    public ResponseEntity deleteImage(@RequestParam ProductImage image) {
+    @DeleteMapping("/{productId}/image/delete")
+    public ResponseEntity deleteImage(@RequestBody ProductImage image) {
         productImageRepository.deleteById(image.getId());
 
         Path dir;
