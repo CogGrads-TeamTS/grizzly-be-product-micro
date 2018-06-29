@@ -36,7 +36,7 @@ public class ProductImageServiceImpl implements ProductImageService {
             byte[] bytes = file.getBytes();
 
             // Modify the name
-            String currentDate = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            String currentDate = new SimpleDateFormat("yyyyMMddHHmmssSS").format(new Date());
             name = FilenameUtils.getBaseName(id + "-".concat(currentDate)) + "." + FilenameUtils.getExtension(file.getOriginalFilename()).toLowerCase();
             System.out.println(name);
 
