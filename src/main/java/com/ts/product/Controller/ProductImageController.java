@@ -65,7 +65,7 @@ public class ProductImageController {
     }
 
     @PutMapping("/edit/{productId}/images")
-    public ResponseEntity editProductImage(@RequestParam long id, String url, int sort) {
+    public ResponseEntity editProductImage(Long id, String url, int sort) {
 
         ProductImage temp = productImageRepository.getOne(id);
 
