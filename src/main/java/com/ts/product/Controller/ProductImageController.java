@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @CrossOrigin
@@ -35,7 +40,7 @@ public class ProductImageController {
     @PostMapping("/{productId}/images/add")
     public ResponseEntity addNewProductImage(@PathVariable(value = "productId") Long productId, @Valid @RequestParam int sort, @RequestParam MultipartFile file ){
 
-        // Attempt to save the image to disk
+        // Attempt to save the image to disk and rename file via singleFileUploadSave
         ResponseEntity fileSavedResponse = productImageService.singleFileUploadSave(productId, file);
         if(fileSavedResponse.getStatusCode() != HttpStatus.CREATED) return fileSavedResponse;
 
@@ -57,5 +62,50 @@ public class ProductImageController {
                 return new ResponseEntity("Product Id not found", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity("Image added to product: " + productId, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/edit/{productId}/image")
+    public ResponseEntity editProductImage(@RequestParam ProductImage image) {
+
+        Path dir;
+        dir = Paths.get("data/images/");
+
+        /**
+         * Check if the sort is the same
+         * return and do nothing
+         * else update sort value
+         */
+//        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, pattern)) {
+//            for (Path path : stream) {
+//                Files.delete(path.toAbsolutePath());
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        //ResponseEntity fileSavedResponse = productImageService.singleFileUploadSave(productId, file);
+
+        return new ResponseEntity("test", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{productId}/image")
+    public ResponseEntity deleteImage(@RequestParam ProductImage image) {
+        productImageRepository.deleteById(image.getId());
+
+        Path dir;
+        String pattern = image.getUrl();
+
+        dir = Paths.get("data/images/");
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, pattern)) {
+            for (Path path : stream) {
+                Files.delete(path.toAbsolutePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity("Deleted Product@{" + image.getUrl() + "} successfully", HttpStatus.OK);
+
+
     }
 }
