@@ -131,10 +131,23 @@ public class ProductController {
             List<Integer> filterRatings = (List<Integer>) filters.get("ratings");
             List<String> filterBrands = (List<String>) filters.get("brands");
             HashMap<Long, Category> filterCategories = (HashMap<Long, Category>) filters.get("categories");
-
+            HashMap<String, Category> getCategories = (HashMap<String, Category>) filters.get("categories");
             page.setFilterRatings(filterRatings);
             page.setFilterBrands(filterBrands);
             page.setFilterCats(filterCategories);
+
+
+            HashMap<String, List<Product>> prodCat = new HashMap<String, List<Product>>();
+            HashMap<String, Object> prodReturn = new HashMap<String, Object>();
+
+            for (Category value : getCategories.values()) {
+                // find product with a particular catId
+                if(productService.findProductByCatId(value.getId(), PageRequest.of(0, 6)) != null) {
+                    // add products to a given category then move onto the next category
+                    prodCat.put(value.getName(), productService.findProductByCatId(value.getId(),PageRequest.of(0, 6)));
+                    page.setProductsByCategories(prodCat);
+                }
+            }
         }
 
         return page;

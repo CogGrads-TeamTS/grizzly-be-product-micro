@@ -127,4 +127,12 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> findNameBySearchTerm(String searchTerm, Pageable pageable){
         return productRepository.findNameBySearchTerm(searchTerm, pageable);
     }
+
+    public List<Integer> catIdsWithProducts(Long catId) {
+        return productRepository.catIdsWithProducts(catId);
+    }
+
+    public List<Product> findProductByCatId(Long catId, Pageable pageable) {
+        return productRepository.findProductByCatId(catId, pageable).getContent();
+    }
 }

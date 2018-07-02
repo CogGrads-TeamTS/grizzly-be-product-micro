@@ -18,4 +18,6 @@ public interface ProductService {
     Product assignCategory(Product product);
     ResponseEntity<HashMap<String, Object>> distinctFilters(String searchTerm);
     Page<Product> findNameBySearchTerm(String searchTerm, Pageable pageable);
+    List<Integer> catIdsWithProducts(Long catId);
+    List<Product> findProductByCatId(Long catId, Pageable pageable);
 }
