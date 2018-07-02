@@ -127,47 +127,24 @@ public class ProductController {
 
         ResponseEntity<HashMap<String, Object>> filterResponse = productService.distinctFilters(searchTerm);
         if (filterResponse.getStatusCodeValue() == 200) {
-            System.out.println(filterResponse.getBody());
             HashMap<String, Object> filters = filterResponse.getBody();
             List<Integer> filterRatings = (List<Integer>) filters.get("ratings");
             List<String> filterBrands = (List<String>) filters.get("brands");
             HashMap<Long, Category> filterCategories = (HashMap<Long, Category>) filters.get("categories");
-
             HashMap<String, Category> getCategories = (HashMap<String, Category>) filters.get("categories");
             page.setFilterRatings(filterRatings);
             page.setFilterBrands(filterBrands);
             page.setFilterCats(filterCategories);
-            //page.setProductsByCategories(getCategories);
-            System.out.println(getCategories);
 
-            /**
-             * For each Cat name
-             * assign as main cat object then do a search
-             * on products with that cat name
-             * Cat1 {
-             *          { prod1 },
-             *          { prod2}
-             *      }
-             * Cat2 {
-             *          { prod3 }
-             *      }
-             *
-             *      h.put(value, key) aka (product, cat)
-             */
 
             HashMap<String, List<Product>> prodCat = new HashMap<String, List<Product>>();
             HashMap<String, Object> prodReturn = new HashMap<String, Object>();
 
             for (Category value : getCategories.values()) {
-                System.out.println(value);
-//                page.setProductsByCategories(value.getName());
-                System.out.println(productService.catIdsWithProducts(value.getId()));
-
-                // find product with that id
+                // find product with a particular catId
                 if(productService.findProductByCatId(value.getId(), PageRequest.of(0, 6)) != null) {
-                    // add products to that cat then move to next cat
+                    // add products to a given category then move onto the next category
                     prodCat.put(value.getName(), productService.findProductByCatId(value.getId(),PageRequest.of(0, 6)));
-                    //prodReturn.put(value.getName(), prodCat);
                     page.setProductsByCategories(prodCat);
                 }
             }

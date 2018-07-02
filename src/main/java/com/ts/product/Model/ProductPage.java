@@ -17,7 +17,6 @@ public class ProductPage {
     private List<String> filterBrands;
     private List<Integer> filterRatings;
     private HashMap<String, List<Product>> productsByCategories;
-//    private String productsByCategories;
 
     public void setFilterCats(HashMap<Long, Category> filterCats) {
         this.filterCats = filterCats;
@@ -59,12 +58,4 @@ public class ProductPage {
     public void setProductsByCategories(HashMap<String, List<Product>> productsByCategories) {
         this.productsByCategories = productsByCategories;
     }
-
-//    public String getProductsByCategories() {
-//        return productsByCategories;
-//    }
-//
-//    public void setProductsByCategories(String productsByCategories) {
-//        this.productsByCategories = productsByCategories;
-//    }
 }
