@@ -58,4 +58,10 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
 
     @Query("SELECT COUNT(p.id) FROM Product p WHERE p.catId = :catId")
     Long categoryProductCount(@Param("catId") Long catId);
+
+    @Query("SELECT DISTINCT (p.catId) FROM Product p WHERE p.catId IS NOT NULL ")
+    List<Integer> catIdsWithProducts(@Param("catId") Long catId);
+
+    @Query("SELECT p FROM Product p WHERE p.catId=:catId")
+    Page<Product> findProductByCatId(@Param("catId") Long catId, Pageable pageable);
 }
