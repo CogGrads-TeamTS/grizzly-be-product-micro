@@ -58,10 +58,14 @@ public class ProductController {
             // set the images
             productDetails.setImages(productImageRepository.findByProductId(productDetails.getId()));
 
-            ResponseEntity<Category> catResponse = categoryClient.getCategory(productDetails.getCatId());
-            if (catResponse.getStatusCodeValue() == 200) {
-                productDetails.setCategory(catResponse.getBody());
-                productDetails.setCatName(catResponse.getBody().getName());
+            try {
+                ResponseEntity<Category> catResponse = categoryClient.getCategory(productDetails.getCatId());
+                if (catResponse.getStatusCodeValue() == 200) {
+                    productDetails.setCategory(catResponse.getBody());
+                    productDetails.setCatName(catResponse.getBody().getName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             return new ResponseEntity<>(productDetails, HttpStatus.OK);
