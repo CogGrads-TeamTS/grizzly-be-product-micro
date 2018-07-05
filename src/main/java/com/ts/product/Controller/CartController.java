@@ -16,6 +16,7 @@ import java.util.Optional;
 @Scope("session")
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin
 public class CartController {
     @Autowired
     private ProductRepository productRepository;
