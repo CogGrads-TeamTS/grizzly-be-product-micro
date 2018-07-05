@@ -1,5 +1,6 @@
 package com.ts.product.Controller;
 
+import com.ts.product.Model.Cart;
 import com.ts.product.Model.CartProduct;
 import com.ts.product.Model.Product;
 import com.ts.product.Repository.ProductRepository;
@@ -21,26 +22,26 @@ public class CartController {
     @Autowired
     private ProductRepository productRepository;
 
-    private HashMap<Long, CartProduct> items;
+    private Cart cart;
 
     public CartController() {
-        this.items = new HashMap<>();
+        this.cart = new Cart();
     }
 
     // example: get the cart
     // GET : http://localhost:5555/cart/
     @GetMapping
-    public HashMap<Long, CartProduct> getItems() {
-        return items;
+    public ResponseEntity getCart() {
+        return ResponseEntity.ok(this.cart);
     }
 
     // example: get product with id 1
     // GET : http://localhost:5555/cart/1
     @GetMapping("/{id}")
     public ResponseEntity getItem(@PathVariable long id) {
-        CartProduct item = items.get(id);
+        CartProduct item = cart.getItem(id);
         if (item == null) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
         return ResponseEntity.ok(item);
     }
@@ -48,40 +49,31 @@ public class CartController {
     // example: delete product with id 1
     // DELETE : http://localhost:5555/cart/1
     @DeleteMapping("/{id}") public ResponseEntity removeItem(@PathVariable long id) {
-        if (!this.items.containsKey(id)) {
+        boolean result = cart.removeItem(id);
+        if (!result) {
             return ResponseEntity.notFound().build();
         }
-        this.items.remove(id);
-        return ResponseEntity.ok(items);
+        return ResponseEntity.ok(this.cart);
     }
 
     // example: set qty to 10 for product id 10
     // PUT : http://localhost:5555/cart/1?qty=10
     @PutMapping("/{id}") public ResponseEntity changeQuantity(@PathVariable long id, @RequestParam int qty) {
-        CartProduct item = items.get(id);
-        if (item == null) {
+        boolean result = cart.changeQuantity(id, qty);
+        if (!result) {
             return ResponseEntity.notFound().build();
         }
-        item.setQty(qty);
-        return ResponseEntity.ok(items);
+        return ResponseEntity.ok(this.cart);
     }
 
     // example: add product id 1 to the cart
-    // POST : http://localhost:5555/cart/add/1
-    @PostMapping("/add/{id}") public ResponseEntity addItem(@PathVariable long id) {
-        CartProduct item;
-        // if product already exists in cart, qty is incremented of that product
-        if (!this.items.containsKey(id)) {
-            Optional<Product> product = productRepository.findById(id);
-            if (!product.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
-            item = new CartProduct(product.get());
-            items.put(item.getId(), item);
-        } else {
-            item = items.get(id);
-            item.incrementQty();
+    // POST : http://localhost:5555/cart/1
+    @PostMapping("/{id}") public ResponseEntity addItem(@PathVariable long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (!product.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(items);
+        cart.addItem(product.get());
+        return ResponseEntity.ok(this.cart);
     }
 }
