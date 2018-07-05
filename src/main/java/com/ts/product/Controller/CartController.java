@@ -2,18 +2,24 @@ package com.ts.product.Controller;
 
 import com.ts.product.Model.CartProduct;
 import com.ts.product.Model.Product;
+import com.ts.product.Repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Component
 @Scope("session")
 @RestController
 @RequestMapping("/cart")
 public class CartController {
+    @Autowired
+    private ProductRepository productRepository;
+
     private HashMap<Long, CartProduct> items;
 
     public CartController() {
@@ -59,17 +65,20 @@ public class CartController {
         return ResponseEntity.ok(items);
     }
 
-    // example: add a product to the cart
-    // POST : http://localhost:5555/cart/add
-    // BODY (product object): { id:1,name:'',price:10 .... }
-    @PostMapping("/add") public ResponseEntity addItem(@RequestBody Product product) {
+    // example: add product id 1 to the cart
+    // POST : http://localhost:5555/cart/add/1
+    @PostMapping("/add/{id}") public ResponseEntity addItem(@PathVariable long id) {
         CartProduct item;
         // if product already exists in cart, qty is incremented of that product
-        if (!this.items.containsKey(product.getId())) {
-            item = new CartProduct(product);
+        if (!this.items.containsKey(id)) {
+            Optional<Product> product = productRepository.findById(id);
+            if (!product.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            item = new CartProduct(product.get());
             items.put(item.getId(), item);
         } else {
-            item = items.get(product.getId());
+            item = items.get(id);
             item.incrementQty();
         }
         return ResponseEntity.ok(items);
