@@ -24,7 +24,7 @@ public class Cart {
 
     private HashMap<Long, CartProduct> items;
 
-    @JoinColumn(name="product_id")
+    @JoinColumn(name="cart_id")
     @OneToMany(targetEntity=CartProduct.class,fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.SELECT)
     private List<CartProduct> products;

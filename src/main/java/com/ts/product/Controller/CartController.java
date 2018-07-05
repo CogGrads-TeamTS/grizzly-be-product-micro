@@ -3,6 +3,7 @@ package com.ts.product.Controller;
 import com.ts.product.Model.Cart;
 import com.ts.product.Model.CartProduct;
 import com.ts.product.Model.Product;
+import com.ts.product.Repository.CartRepository;
 import com.ts.product.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,6 +26,9 @@ public class CartController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CartRepository cartRepository;
+
     private Cart cart;
 
     public CartController() {
@@ -42,6 +46,7 @@ public class CartController {
             return ResponseEntity.ok(this.cart);
         }
         return ResponseEntity.ok(this.cart);
+//        return ResponseEntity.ok(cartRepository.findByUsername(principal.getName()));
     }
 
     // example: get product with id 1
@@ -77,12 +82,19 @@ public class CartController {
 
     // example: add product id 1 to the cart
     // POST : http://localhost:5555/cart/1
-    @PostMapping("/{id}") public ResponseEntity addItem(@PathVariable long id) {
+    @PostMapping("/{id}") public ResponseEntity addItem(@PathVariable long id, Principal principal) {
         Optional<Product> product = productRepository.findById(id);
         if (!product.isPresent()) {
             return ResponseEntity.notFound().build();
         }
         cart.addItem(product.get());
+
+        if (principal != null) {
+            System.out.println("user logged in");
+            cart.setUsername(principal.getName());
+            cartRepository.save(cart);
+        }
+
         return ResponseEntity.ok(this.cart);
     }
 }
