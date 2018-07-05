@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
 
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -17,7 +20,7 @@ import java.util.Optional;
 @Scope("session")
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin
+@CrossOrigin(origins = )
 public class CartController {
     @Autowired
     private ProductRepository productRepository;
@@ -31,7 +34,13 @@ public class CartController {
     // example: get the cart
     // GET : http://localhost:5555/cart/
     @GetMapping
-    public ResponseEntity getCart() {
+    public ResponseEntity getCart(HttpSession session, Principal principal) {
+        System.out.println(session.getId());
+        if (principal == null) {
+            // user not logged in
+            System.out.println("user not logged in");
+            return ResponseEntity.ok(this.cart);
+        }
         return ResponseEntity.ok(this.cart);
     }
 

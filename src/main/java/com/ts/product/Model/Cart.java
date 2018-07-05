@@ -3,25 +3,40 @@ package com.ts.product.Model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ts.product.Repository.ProductRepository;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.*;
 import java.util.*;
 
-
+@Entity
 public class Cart {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private String username;
 
     private HashMap<Long, CartProduct> items;
 
+    @JoinColumn(name="product_id")
+    @OneToMany(targetEntity=CartProduct.class,fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @Fetch(FetchMode.SELECT)
+    private List<CartProduct> products;
+
     public Cart() {
         this.items = new HashMap<>();
+        this.products = new ArrayList<>();
     }
 
     public Collection<CartProduct> getItems() {
-        return items.values();
+        //return items.values();
+        return this.products;
     }
 
     public CartProduct getItem(long id) {
@@ -30,6 +45,22 @@ public class Cart {
             return null;
         }
         return item;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @JsonInclude

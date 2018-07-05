@@ -1,5 +1,15 @@
 package com.ts.product.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class CartProduct extends Product {
     private int qty;
 
@@ -7,6 +17,12 @@ public class CartProduct extends Product {
         super(product);
         this.qty = 1;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Cart cart;
 
     public long getTotalPrice() {
         return (long) (this.qty * this.getPrice());
