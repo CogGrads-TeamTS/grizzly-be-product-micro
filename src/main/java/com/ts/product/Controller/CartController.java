@@ -20,7 +20,7 @@ import java.util.Optional;
 @Scope("session")
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin(origins = )
+@CrossOrigin(origins = {"http://localhost:3000", "http://ts.ausgrads.academy"}, allowCredentials = "true")
 public class CartController {
     @Autowired
     private ProductRepository productRepository;
