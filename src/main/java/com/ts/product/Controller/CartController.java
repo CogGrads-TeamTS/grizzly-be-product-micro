@@ -17,7 +17,7 @@ import java.util.Optional;
 @Scope("session")
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3000", "http://ts.ausgrads.academy"})
 public class CartController {
     @Autowired
     private ProductRepository productRepository;
