@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 
 public class Cart {
@@ -21,8 +20,8 @@ public class Cart {
         this.items = new HashMap<>();
     }
 
-    public HashMap<Long, CartProduct> getItems() {
-        return items;
+    public Collection<CartProduct> getItems() {
+        return items.values();
     }
 
     public CartProduct getItem(long id) {
