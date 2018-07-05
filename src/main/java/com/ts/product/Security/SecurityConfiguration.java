@@ -22,6 +22,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .forRS256(apiAudience, issuer)
                 .configure(http).cors().and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/cart").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/{id}", "/image/delete").hasAuthority("admin")
                 .antMatchers(HttpMethod.PUT, "/edit/{id}", "/edit/{productId}/images").hasAuthority("admin")
                 .antMatchers(HttpMethod.POST, "/add", "/{productId}/images/add").hasAuthority("admin")
