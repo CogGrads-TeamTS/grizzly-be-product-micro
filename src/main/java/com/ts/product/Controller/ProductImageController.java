@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3000", "http://ts.ausgrads.academy"})
 @RestController
 public class ProductImageController {
 
