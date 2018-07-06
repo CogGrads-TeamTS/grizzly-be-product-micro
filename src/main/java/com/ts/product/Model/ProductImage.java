@@ -18,7 +18,7 @@ public class ProductImage {
     private int sort;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name="product_id", nullable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Product product;

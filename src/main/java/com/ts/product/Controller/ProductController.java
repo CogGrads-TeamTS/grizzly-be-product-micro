@@ -56,7 +56,7 @@ public class ProductController {
             ProductDetails productDetails = new ProductDetails(product.get());
 
             // set the images
-            productDetails.setImages(productImageRepository.findByProductId(productDetails.getId()));
+            //productDetails.setImages(productImageRepository.findByProductId(productDetails.getId()));
 
             try {
                 ResponseEntity<Category> catResponse = categoryClient.getCategory(productDetails.getCatId());
