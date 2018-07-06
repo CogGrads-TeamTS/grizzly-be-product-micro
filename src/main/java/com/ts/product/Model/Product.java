@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.List;
-
+import java.util.Set;
 
 
 @Entity
@@ -26,10 +26,9 @@ public class Product {
     private String description;
     private String brand;
 
-    @JoinColumn(name="product_id")
-    @OneToMany(targetEntity=ProductImage.class,fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "product")
     @Fetch(FetchMode.SELECT)
-    private List<ProductImage> images;
+    private Set<ProductImage> images;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Float price;
@@ -51,6 +50,7 @@ public class Product {
         this.catName = product.catName;
         this.discount = product.discount;
         this.rating = product.rating;
+        this.images = product.images;
     }
 
     public Product() {
@@ -67,11 +67,11 @@ public class Product {
         this.catName = catName;
     }
 
-    public List<ProductImage> getImages() {
+    public Set<ProductImage> getImages() {
         return images;
     }
 
-    public void setImages(List<ProductImage> images) {
+    public void setImages(Set<ProductImage> images) {
         this.images = images;
     }
 
