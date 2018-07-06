@@ -56,7 +56,7 @@ public class Cart {
         if (item == null) {
             return false;
         }
-        item.setQty(qty);
+        if (qty > 0) item.setQty(qty);
         return true;
     }
 
@@ -64,15 +64,17 @@ public class Cart {
         return this.items.containsKey(id);
     }
 
-    public void addItem(Product product) {
+    public void addItem(Product product, int qty) {
+        if (qty < 1) return;
         CartProduct item;
         // if product already exists in cart, qty is incremented of that product
         if (!this.items.containsKey(product.getId())) {
-            item = new CartProduct(product);
+            item = new CartProduct(product, qty);
             items.put(item.getId(), item);
         } else {
             item = items.get(product.getId());
-            item.incrementQty();
+            int newQty = item.getQty() + qty;
+            if (newQty > 0) item.setQty(newQty);
         }
     }
 }

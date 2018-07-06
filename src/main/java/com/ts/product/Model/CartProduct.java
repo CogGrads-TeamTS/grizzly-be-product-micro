@@ -3,9 +3,9 @@ package com.ts.product.Model;
 public class CartProduct extends Product {
     private int qty;
 
-    public CartProduct(Product product) {
+    public CartProduct(Product product, int qty) {
         super(product);
-        this.qty = 1;
+        this.qty = qty;
     }
 
     public long getTotalPrice() {

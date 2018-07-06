@@ -68,12 +68,12 @@ public class CartController {
 
     // example: add product id 1 to the cart
     // POST : http://localhost:5555/cart/1
-    @PostMapping("/{id}") public ResponseEntity addItem(@PathVariable long id) {
+    @PostMapping("/{id}") public ResponseEntity addItem(@PathVariable long id, @RequestParam int qty) {
         Optional<Product> product = productRepository.findById(id);
         if (!product.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        cart.addItem(product.get());
+        cart.addItem(product.get(), qty);
         return ResponseEntity.ok(this.cart);
     }
 }
