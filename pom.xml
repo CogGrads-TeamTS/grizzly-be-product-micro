@@ -128,6 +128,12 @@
             <artifactId>auth0-spring-security-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>1.13.1</version>
+        </dependency>
     </dependencies>
 
 

@@ -32,7 +32,11 @@ public class CartController {
     // GET : http://localhost:5555/cart/
     @GetMapping
     public ResponseEntity getCart() {
-        return ResponseEntity.ok(this.cart);
+        return ResponseEntity.ok(this.cart());
+    }
+
+    public Cart cart() {
+        return this.cart;
     }
 
     // example: get product with id 1
