@@ -64,4 +64,7 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
 
     @Query("SELECT p FROM Product p WHERE p.catId=:catId")
     Page<Product> findProductByCatId(@Param("catId") Long catId, Pageable pageable);
+
+    @Query("SELECT p from Product p WHERE p.id IN :ids")
+    List<Product> findBatchProducts(@Param("ids") Long[] prodIds);
 }

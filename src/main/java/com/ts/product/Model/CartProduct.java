@@ -8,6 +8,10 @@ public class CartProduct extends Product {
         this.qty = qty;
     }
 
+    public CartProduct() {
+
+    }
+
     public long getTotalPrice() {
         return (long) (this.qty * this.getPrice());
     }

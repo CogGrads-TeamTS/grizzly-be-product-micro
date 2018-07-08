@@ -20,6 +20,10 @@ public class Cart {
         this.items = new HashMap<>();
     }
 
+    public Cart(HashMap<Long, CartProduct> items) {
+        this.items = items;
+    }
+
     public Collection<CartProduct> getItems() {
         return items.values();
     }
