@@ -23,7 +23,7 @@ public class PaymentController {
     private PaypalService paypalService;
 
     @PostMapping(value = "/make/payment")
-    public Map<String, Object> makePayment(@RequestParam("sum") String sum, @RequestBody PaymentRequest request){
+    public Map<String, Object> makePayment(@RequestBody PaymentRequest request){
         for (CartProduct item : request.getItems()) {
             System.out.println(item.getId());
         }
