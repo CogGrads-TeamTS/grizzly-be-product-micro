@@ -82,7 +82,7 @@ public class PaypalService {
         // calculate total amount based off itemList
         float amountTotal = 0;
         for(Item item : itemList.getItems()) {
-            amountTotal =+ (Float.parseFloat(item.getPrice()) * Integer.parseInt(item.getQuantity()));
+            amountTotal += (Float.parseFloat(item.getPrice()) * Integer.parseInt(item.getQuantity()));
         }
         amount.setTotal(Float.toString(amountTotal));
 
@@ -91,6 +91,14 @@ public class PaypalService {
         // assign amount to paypal transaction
         transaction.setAmount(amount);
 
+        ShippingAddress shippingAddress = new ShippingAddress();
+        shippingAddress.setPostalCode("3000");
+        shippingAddress.setCity("Melbourne");
+        shippingAddress.setRecipientName("Blake Howe");
+        shippingAddress.setCountryCode("AU");
+        shippingAddress.setLine1("1 Sunflower Court");
+        itemList.setShippingAddress(shippingAddress);
+
         // assign product metadata to paypal transaction
         transaction.setItemList(itemList);
 
@@ -98,6 +106,7 @@ public class PaypalService {
         transactions.add(transaction);
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
+
 
         Payment payment = new Payment();
         payment.setIntent("sale");
