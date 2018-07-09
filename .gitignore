@@ -38,3 +38,5 @@ Thumbs.db
 # Application Properties - DEV ONLY #
 application.properties
 application.yaml
+
+data/images/

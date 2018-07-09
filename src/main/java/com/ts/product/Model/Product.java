@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ts.product.Repository.ProductImageRepository;
 import com.ts.product.Model.ProductImage;
 
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public class Product {
     private String description;
     private String brand;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.SELECT)
     private Set<ProductImage> images;
 
