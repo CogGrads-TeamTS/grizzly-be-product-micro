@@ -84,7 +84,7 @@ public class PaypalService {
         for(Item item : itemList.getItems()) {
             amountTotal += (Float.parseFloat(item.getPrice()) * Integer.parseInt(item.getQuantity()));
         }
-        amount.setTotal(Float.toString(amountTotal));
+        amount.setTotal(String.format("%.2f", amountTotal));
 
         Transaction transaction = new Transaction();
 
