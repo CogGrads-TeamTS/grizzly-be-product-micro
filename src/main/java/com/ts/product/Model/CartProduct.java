@@ -1,5 +1,7 @@
 package com.ts.product.Model;
 
+import java.text.DecimalFormat;
+
 public class CartProduct extends Product {
     private int qty;
 
@@ -12,8 +14,9 @@ public class CartProduct extends Product {
 
     }
 
-    public long getTotalPrice() {
-        return (long) (this.qty * this.getPrice());
+    public double getTotalPrice() {
+        double number = this.qty * this.getPrice();
+        return Math.round(number*100.0)/100.0;
     }
 
     public void incrementQty() {
