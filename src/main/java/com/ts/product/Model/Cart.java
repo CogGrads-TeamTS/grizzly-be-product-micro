@@ -64,8 +64,8 @@ public class Cart {
         return true;
     }
 
-    public boolean contains(long id) {
-        return this.items.containsKey(id);
+    public boolean contains(long pid) {
+        return this.items.containsKey(pid);
     }
 
     public void addItem(Product product, int qty) {
