@@ -142,7 +142,7 @@ public class PaypalService {
         return response;
     }
 
-    public Map<String, Object> completePayment(HttpServletRequest req){
+    public Map<String, Object> completePayment(HttpServletRequest req, String username){
         Map<String, Object> response = new HashMap();
         Payment payment = new Payment();
         payment.setId(req.getParameter("paymentID"));
@@ -162,9 +162,9 @@ public class PaypalService {
                     System.out.println(item.getSku());
                 }
 
-                Order order = persistOrder(createdPayment);
+                Order order = persistOrder(createdPayment, username);
                 response.put("status", "success");
-                response.put("payment", createdPayment.toJSON());
+                //response.put("payment", createdPayment.toJSON());
                 response.put("orderId", order.getId());
             }
         } catch (PayPalRESTException e) {
@@ -179,7 +179,7 @@ public class PaypalService {
         return response;
     }
 
-    public Order persistOrder(Payment newPayment) throws PersistenceException {
+    public Order persistOrder(Payment newPayment, String username) throws PersistenceException {
         Order order = new Order();
         // create and persist the order record into database based off the confirmed payment
         List<Item> newPaymentItems = newPayment.getTransactions().get(0).getItemList().getItems();
@@ -203,6 +203,10 @@ public class PaypalService {
             OrderProduct orderProduct = new OrderProduct(product, Integer.parseInt(newPaymentItem.getQuantity()));
             order.addProduct(orderProduct);
         }
+
+        order.setUsername(username);
+
+        order.setStatus("New");
 
         order.setComments("blah blah blah");
 

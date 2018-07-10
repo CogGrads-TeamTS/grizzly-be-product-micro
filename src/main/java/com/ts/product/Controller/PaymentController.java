@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class PaymentController {
     }
 
     @PostMapping(value = "/complete/payment")
-    public Map<String, Object> completePayment(HttpServletRequest request){
-        return paypalService.completePayment(request);
+    public Map<String, Object> completePayment(HttpServletRequest request, Principal principal){
+        return paypalService.completePayment(request, principal.getName());
     }
 }
