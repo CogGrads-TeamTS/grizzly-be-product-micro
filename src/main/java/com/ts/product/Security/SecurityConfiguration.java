@@ -26,6 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/{id}", "/image/delete").hasAuthority("admin")
                 .antMatchers(HttpMethod.PUT, "/edit/{id}", "/edit/{productId}/images").hasAuthority("admin")
                 .antMatchers(HttpMethod.POST, "/add", "/{productId}/images/add").hasAuthority("admin")
+                .antMatchers(HttpMethod.POST, "/paypal/make/payment", "/paypal/complete/payment").hasAuthority("user")
                 .anyRequest().permitAll();
     }
 }

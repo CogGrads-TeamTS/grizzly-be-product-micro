@@ -15,46 +15,54 @@ import java.util.Set;
 
 
 @Entity
-public class Product {
+public class Product extends ProductSuperClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
-    @Column(length = 1000, columnDefinition = "varchar(1000)")
-    private String description;
-    private String brand;
-
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.SELECT)
-    private Set<ProductImage> images;
+    protected List<ProductImage> images;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    private Float price;
+    @Column(length = 1000, columnDefinition = "varchar(1000)")
+    protected String description;
+
+    private int rating;
 
     private long catId;
 
     @Transient
     private String catName;
-    private int discount;
-    private int rating;
 
     public Product(Product product) {
+        super(product);
         this.id = product.id;
-        this.name = product.name;
         this.description = product.description;
-        this.brand = product.brand;
-        this.price = product.price;
         this.catId = product.catId;
         this.catName = product.catName;
-        this.discount = product.discount;
         this.rating = product.rating;
         this.images = product.images;
     }
 
     public Product() {
         this.catName = "N/A";
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getCatId() {
+        return catId;
+    }
+
+    public void setCatId(long catId) {
+        this.catId = catId;
     }
 
     @Transient
@@ -67,30 +75,6 @@ public class Product {
         this.catName = catName;
     }
 
-    public Set<ProductImage> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<ProductImage> images) {
-        this.images = images;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -99,39 +83,19 @@ public class Product {
         this.description = description;
     }
 
-    public String getBrand() { return brand; }
-
-    public void setBrand(String brand) { this.brand = brand; }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
-    public long getCatId() {
-        return catId;
-    }
-
-    public void setCatId(long catId) {
-        this.catId = catId;
-    }
-
-    public int getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
     public int getRating() {
         return rating;
     }
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
     }
 }
