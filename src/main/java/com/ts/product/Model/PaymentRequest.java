@@ -1,11 +1,20 @@
 package com.ts.product.Model;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class PaymentRequest {
     private List<CartProduct> items;
     private String currency;
-    private Float total;
+    private HashMap<String, String> checkout;
+
+    public HashMap<String, String> getCheckout() {
+        return checkout;
+    }
+
+    public void setCheckout(HashMap<String, String> checkout) {
+        this.checkout = checkout;
+    }
 
     public List<CartProduct> getItems() {
         return items;
@@ -21,13 +30,5 @@ public class PaymentRequest {
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public Float getTotal() {
-        return total;
-    }
-
-    public void setTotal(Float total) {
-        this.total = total;
     }
 }

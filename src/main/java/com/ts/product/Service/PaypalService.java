@@ -84,19 +84,21 @@ public class PaypalService {
         for(Item item : itemList.getItems()) {
             amountTotal += (Float.parseFloat(item.getPrice()) * Integer.parseInt(item.getQuantity()));
         }
-        amount.setTotal(Float.toString(amountTotal));
+        amount.setTotal(String.format("%.2f", amountTotal));
 
         Transaction transaction = new Transaction();
 
         // assign amount to paypal transaction
         transaction.setAmount(amount);
+        transaction.setNoteToPayee(request.getCheckout().get("comments"));
+        transaction.setDescription("Grizzly Store Online Order");
 
         ShippingAddress shippingAddress = new ShippingAddress();
-        shippingAddress.setPostalCode("3000");
-        shippingAddress.setCity("Melbourne");
-        shippingAddress.setRecipientName("Blake Howe");
+        shippingAddress.setPostalCode(request.getCheckout().get("ship_postcode"));
+        shippingAddress.setCity(request.getCheckout().get("ship_city"));
+        shippingAddress.setRecipientName(request.getCheckout().get("ship_name"));
         shippingAddress.setCountryCode("AU");
-        shippingAddress.setLine1("1 Sunflower Court");
+        shippingAddress.setLine1(request.getCheckout().get("ship_address"));
         itemList.setShippingAddress(shippingAddress);
 
         // assign product metadata to paypal transaction
