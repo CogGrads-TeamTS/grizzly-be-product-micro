@@ -1,7 +1,6 @@
 package com.ts.product.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.paypal.api.payments.Order;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
