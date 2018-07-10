@@ -14,6 +14,8 @@ public class OrderProduct extends ProductSuperClass {
 
     private int qty;
 
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="order_id", nullable=false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -27,6 +29,15 @@ public class OrderProduct extends ProductSuperClass {
     public OrderProduct(Product product, int qty) {
         super(product);
         this.qty = qty;
+        if (!product.images.isEmpty()) {
+            for (ProductImage image : product.images) {
+                if (image.getSort() == 0) {
+                    // set image url of order product to first image only.
+                    this.imageUrl = image.getUrl();
+                    break;
+                }
+            }
+        }
     }
 
     public long getId() {
@@ -51,5 +62,13 @@ public class OrderProduct extends ProductSuperClass {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

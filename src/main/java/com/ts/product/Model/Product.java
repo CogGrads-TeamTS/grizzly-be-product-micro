@@ -23,7 +23,7 @@ public class Product extends ProductSuperClass {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.SELECT)
-    protected Set<ProductImage> images;
+    protected List<ProductImage> images;
 
     @Column(length = 1000, columnDefinition = "varchar(1000)")
     protected String description;
@@ -91,11 +91,11 @@ public class Product extends ProductSuperClass {
         this.rating = rating;
     }
 
-    public Set<ProductImage> getImages() {
+    public List<ProductImage> getImages() {
         return images;
     }
 
-    public void setImages(Set<ProductImage> images) {
+    public void setImages(List<ProductImage> images) {
         this.images = images;
     }
 }

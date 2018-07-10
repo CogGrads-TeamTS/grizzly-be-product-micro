@@ -3,26 +3,26 @@ package com.ts.product.Service;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-import com.ts.product.Model.Cart;
-import com.ts.product.Model.CartProduct;
-import com.ts.product.Model.PaymentRequest;
-import com.ts.product.Model.Product;
+import com.ts.product.Model.*;
+import com.ts.product.Model.Order;
+import com.ts.product.Repository.OrderRepository;
 import com.ts.product.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PaypalService {
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Value("${paypal.clientId}")
     private String clientId;
@@ -154,8 +154,6 @@ public class PaypalService {
             APIContext context = new APIContext(clientId, clientSecret, mode);
             Payment createdPayment = payment.execute(context, paymentExecution);
             if(createdPayment!=null){
-                response.put("status", "success");
-                response.put("payment", createdPayment.toJSON());
 
                 // get the items paid for
                 // using sku from each item, can construct the order history to store in database.
@@ -163,10 +161,61 @@ public class PaypalService {
                 for (Item item : items) {
                     System.out.println(item.getSku());
                 }
+
+                Order order = persistOrder(createdPayment);
+                response.put("status", "success");
+                response.put("payment", createdPayment.toJSON());
+                response.put("orderId", order.getId());
             }
         } catch (PayPalRESTException e) {
             System.err.println(e.getDetails());
+            response.put("status", "error");
+            response.put("message", "Error communicating with PayPal");
+        } catch (PersistenceException e) {
+            response.put("status", "error");
+            response.put("message", "Error saving to database");
         }
+
         return response;
+    }
+
+    public Order persistOrder(Payment newPayment) throws PersistenceException {
+        Order order = new Order();
+        // create and persist the order record into database based off the confirmed payment
+        List<Item> newPaymentItems = newPayment.getTransactions().get(0).getItemList().getItems();
+
+        List<Long> newPaymentSkus = new ArrayList<>(); // list of product ids to fetch from database
+        for (Item newPaymentItem: newPaymentItems) {
+            newPaymentSkus.add(Long.parseLong(newPaymentItem.getSku()));
+        }
+
+        // fetch the products from the database
+        List<Product> dbProducts = productRepository.findBatchProducts(newPaymentSkus.toArray(new Long[newPaymentSkus.size()]));
+        HashMap<Long, Product> dbProductsHashMap = new HashMap<>();
+        for (Product product : dbProducts) {
+            dbProductsHashMap.put(product.getId(), product);
+        }
+
+
+        for (Item newPaymentItem: newPaymentItems) {
+            // create the order product and add to the set
+            Product product = dbProductsHashMap.get(Long.parseLong(newPaymentItem.getSku()));
+            OrderProduct orderProduct = new OrderProduct(product, Integer.parseInt(newPaymentItem.getQuantity()));
+            order.addProduct(orderProduct);
+        }
+
+        order.setComments("blah blah blah");
+
+        order.setPaymentId(newPayment.getId());
+
+        order.setPaymentMethod("paypal");
+
+        order.setShippingAddress(newPayment.getTransactions().get(0).getItemList().getShippingAddress().getLine1());
+        order.setShippingCity(newPayment.getTransactions().get(0).getItemList().getShippingAddress().getCity());
+        order.setShippingName(newPayment.getTransactions().get(0).getItemList().getShippingAddress().getRecipientName());
+        order.setShippingPostCode(newPayment.getTransactions().get(0).getItemList().getShippingAddress().getPostalCode());
+
+        orderRepository.save(order);
+        return order;
     }
 }

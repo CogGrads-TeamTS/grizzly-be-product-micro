@@ -4,18 +4,21 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(name="\"order\"")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
-    protected Set<OrderProduct> products;
+    private List<OrderProduct> products = new ArrayList<>();
 
     private String status;
     private String shippingName;
@@ -28,6 +31,11 @@ public class Order {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    public void addProduct(OrderProduct product) {
+        products.add(product);
+        product.setOrder(this);
+    }
 
     public String getStatus() {
         return status;
@@ -101,11 +109,11 @@ public class Order {
         this.id = id;
     }
 
-    public Set<OrderProduct> getProducts() {
+    public List<OrderProduct> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<OrderProduct> products) {
+    public void setProducts(List<OrderProduct> products) {
         this.products = products;
     }
 
