@@ -1,6 +1,7 @@
 package com.ts.product.Controller;
 
 
+import com.google.common.collect.Lists;
 import com.ts.product.Model.CartProduct;
 import com.ts.product.Model.Order;
 import com.ts.product.Repository.OrderRepository;
@@ -25,6 +26,6 @@ public class OrderController {
         if (orders == null) {
             return null;
         }
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(Lists.reverse(orders));
     }
 }
