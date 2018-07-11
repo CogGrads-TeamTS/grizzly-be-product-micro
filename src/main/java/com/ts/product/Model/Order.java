@@ -4,6 +4,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +43,7 @@ public class Order {
     private String comments;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date date = new Date();
 
     public void addProduct(OrderProduct product) {
         products.add(product);
@@ -104,8 +106,10 @@ public class Order {
         this.comments = comments;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        if (this.date == null) return "";
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        return df.format(this.date);
     }
 
     public void setDate(Date date) {

@@ -208,7 +208,7 @@ public class PaypalService {
 
         order.setStatus("New");
 
-        order.setComments("blah blah blah");
+        order.setComments(newPayment.getTransactions().get(0).getNoteToPayee());
 
         order.setPaymentId(newPayment.getId());
 
