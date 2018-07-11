@@ -15,7 +15,6 @@ public class ProductPage {
     private Page<Product> products;
     private HashMap<Long, Category> filterCats;
     private List<String> filterBrands;
-    private List<Integer> filterRatings;
     private HashMap<String, List<Product>> productsByCategories;
 
     public void setFilterCats(HashMap<Long, Category> filterCats) {
@@ -25,14 +24,6 @@ public class ProductPage {
     public ProductPage(Page<Product> products) {
         this.products = products;
 
-    }
-
-    public List<Integer> getFilterRatings() {
-        return filterRatings;
-    }
-
-    public void setFilterRatings(List<Integer> filterRatings) {
-        this.filterRatings = filterRatings;
     }
 
     public void setFilterBrands(List<String> filterBrands) {
