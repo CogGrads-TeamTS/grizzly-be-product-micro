@@ -1,9 +1,10 @@
 package com.ts.product.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 
 @Entity
 public class ProductRating {
@@ -14,8 +15,14 @@ public class ProductRating {
 
     private int rating;
     private String ratingDescription;
-    private long productId;
+//    private long productId;
     private String userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="product_id", nullable=false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Product product;
 
     public String getUserId() {
         return userId;
@@ -23,6 +30,14 @@ public class ProductRating {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public long getId() {
@@ -33,11 +48,11 @@ public class ProductRating {
         this.Id = Id;
     }
 
-    public long getProductId() { return productId; }
-
-    public void setProductId(long productId) {
-        this.productId = productId;
-    }
+//    public long getProductId() { return productId; }
+//
+//    public void setProductId(long productId) {
+//        this.productId = productId;
+//    }
 
     public int getRating() { return rating; }
 

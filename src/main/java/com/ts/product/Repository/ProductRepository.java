@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ProductRepository extends CrudRepository<Product, Long>, PagingAndSortingRepository<Product, Long> {
 
     // somewhat optimises as doesn't grab duplicate products that have same brand,catId and rating in the same record.
-    @Query("SELECT DISTINCT p.brand, p.catId, p.rating from Product p WHERE " +
+    @Query("SELECT DISTINCT p.brand, p.catId from Product p WHERE " +
             "LOWER(p.id) = CONCAT('',:search,'') OR " +
             "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
             "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%'))")
@@ -39,12 +39,6 @@ public interface ProductRepository extends CrudRepository<Product, Long>, Paging
             "LOWER(p.brand) = :brand")
     Page<Product> findBySearchTermBrand(@Param("search") String searchTerm, Pageable pageable, @Param("brand") String brand);
 
-    @Query("SELECT p FROM Product p WHERE " +
-            "(LOWER(p.id) = CONCAT('',:search,'') OR " +
-            "LOWER(p.name) LIKE LOWER(CONCAT('%',:search, '%')) OR " +
-            "LOWER(p.brand) LIKE LOWER(CONCAT('%',:search, '%'))) AND " +
-            "LOWER(p.rating) = :rating")
-    Page<Product> findBySearchTermRating(@Param("search") String searchTerm, Pageable pageable, @Param("rating") Integer rating);
 
     @Query("SELECT p FROM Product p WHERE " +
             "(LOWER(p.id) = CONCAT('',:search,'') OR " +
