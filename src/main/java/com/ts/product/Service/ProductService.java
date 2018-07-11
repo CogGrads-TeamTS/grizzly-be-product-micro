@@ -13,7 +13,6 @@ public interface ProductService {
     Page<Product> findBySearchTerm(String searchTerm, Pageable pageable);
     Page<Product> findBySearchTermCategory(String searchTerm, Pageable pageable, Long categoryId);
     Page<Product> findBySearchTermBrand(String searchTerm, Pageable pageable, String brand);
-    Page<Product> findBySearchTermRating(String searchTerm, Pageable pageable, Integer rating);
     Page<Product> assignCategories(Page<Product> products);
     Product assignCategory(Product product);
     ResponseEntity<HashMap<String, Object>> distinctFilters(String searchTerm);
