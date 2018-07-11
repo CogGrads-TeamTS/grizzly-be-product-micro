@@ -25,10 +25,12 @@ public class Product extends ProductSuperClass {
     @Fetch(FetchMode.SELECT)
     protected List<ProductImage> images;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    @Fetch(FetchMode.SELECT)
+    private List<ProductRating> ratings;
+
     @Column(length = 1000, columnDefinition = "varchar(1000)")
     protected String description;
-
-    private int rating;
 
     private long catId;
 
@@ -41,8 +43,28 @@ public class Product extends ProductSuperClass {
         this.description = product.description;
         this.catId = product.catId;
         this.catName = product.catName;
-        this.rating = product.rating;
         this.images = product.images;
+        this.ratings = product.ratings;
+    }
+
+    public Double getRating() {
+
+        Double average = 0.00;
+        Double total = 0.00;
+
+        for( ProductRating rating : this.ratings){
+
+            average += rating.getRating();
+        }
+
+        total = average/this.ratings.size();
+
+        return Math.round(total*100.0)/100.0;
+
+    }
+
+    public void setRatings(List<ProductRating> ratings) {
+        this.ratings = ratings;
     }
 
     public Product() {
@@ -83,13 +105,6 @@ public class Product extends ProductSuperClass {
         this.description = description;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 
     public List<ProductImage> getImages() {
         return images;

@@ -91,7 +91,6 @@ public class ProductController {
         product.setPrice(price);
         product.setCatId(catId);
         product.setDiscount(discount);
-        product.setRating(rating);
         productRepository.save(product);
 
         return new ResponseEntity<>(productService.assignCategory(product), HttpStatus.CREATED);
@@ -116,10 +115,7 @@ public class ProductController {
             // fetch paginated products from repository with filtered brand
             products = productService.findBySearchTermBrand(searchTerm, pageable, brand);
         }
-        else if (rating != null) {
-            // fetch paginated products from repository with filtered rating
-            products = productService.findBySearchTermRating(searchTerm, pageable, rating);
-        }
+
         else {
             products = productService.findBySearchTerm(searchTerm, pageable);
         }
