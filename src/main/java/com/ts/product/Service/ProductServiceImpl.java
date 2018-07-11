@@ -95,9 +95,9 @@ public class ProductServiceImpl implements ProductService {
         for (Object[] filter: filterQuery) {
             String brand = (String) filter[0];
             long catId = (long) filter[1];
-            int rating = (int) filter[2];
+//            int rating = (int) filter[2];
             if (!brands.contains(brand) && brand != null && !brand.equals("")) brands.add(brand);
-            if (!ratings.contains(rating)) ratings.add(rating);
+//            if (!ratings.contains(rating)) ratings.add(rating);
             if (!categoryIds.contains(catId)) categoryIds.add(catId);
         }
 
@@ -115,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
 
         HashMap<String, Object> filters = new HashMap<>();
         if (brands.size() > 0) filters.put("brands", brands);
-        if (ratings.size() > 0) filters.put("ratings", ratings);
+//        if (ratings.size() > 0) filters.put("ratings", ratings);
         if (categories.size() > 0) filters.put("categories", categories);
 
         return (filters.size() > 0) ?

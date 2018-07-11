@@ -128,11 +128,11 @@ public class ProductController {
         ResponseEntity<HashMap<String, Object>> filterResponse = productService.distinctFilters(searchTerm);
         if (filterResponse.getStatusCodeValue() == 200) {
             HashMap<String, Object> filters = filterResponse.getBody();
-            List<Integer> filterRatings = (List<Integer>) filters.get("ratings");
+//            List<Integer> filterRatings = (List<Integer>) filters.get("ratings");
             List<String> filterBrands = (List<String>) filters.get("brands");
             HashMap<Long, Category> filterCategories = (HashMap<Long, Category>) filters.get("categories");
             HashMap<String, Category> getCategories = (HashMap<String, Category>) filters.get("categories");
-            page.setFilterRatings(filterRatings);
+//            page.setFilterRatings(filterRatings);
             page.setFilterBrands(filterBrands);
             page.setFilterCats(filterCategories);
 
