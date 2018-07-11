@@ -37,12 +37,12 @@ public class Cart {
     }
 
     @JsonInclude
-    public float getTotalPrice() {
+    public double getTotalPrice() {
         float total = 0;
         for (CartProduct product : this.items.values()) {
             total += product.getTotalPrice();
         }
-        return total;
+        return Math.round(total*100.0)/100.0;
     }
 
 

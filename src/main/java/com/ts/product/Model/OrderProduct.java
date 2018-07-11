@@ -40,6 +40,11 @@ public class OrderProduct extends ProductSuperClass {
         }
     }
 
+    public double getTotalPrice() {
+        double number = this.qty * this.getPrice();
+        return Math.round(number*100.0)/100.0;
+    }
+
     public long getId() {
         return id;
     }

@@ -1,5 +1,6 @@
 package com.ts.product.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -48,6 +49,15 @@ public class Order {
     public void addProduct(OrderProduct product) {
         products.add(product);
         product.setOrder(this);
+    }
+
+    @JsonInclude
+    public float getTotalPrice() {
+        float total = 0;
+        for (OrderProduct product : this.products) {
+            total += product.getTotalPrice();
+        }
+        return total;
     }
 
     public String getStatus() {
