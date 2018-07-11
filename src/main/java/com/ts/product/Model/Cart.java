@@ -45,6 +45,10 @@ public class Cart {
         return Math.round(total*100.0)/100.0;
     }
 
+    public void clear() {
+        this.items.clear();
+    }
+
 
     public boolean removeItem(long id) {
         if (!this.items.containsKey(id)) {
