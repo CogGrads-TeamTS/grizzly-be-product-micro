@@ -39,6 +39,12 @@ public class CartController {
         return this.cart;
     }
 
+    @DeleteMapping
+    public ResponseEntity clearCart() {
+        this.cart.clear();
+        return ResponseEntity.ok(this.cart);
+    }
+
     // example: get product with id 1
     // GET : http://localhost:5555/cart/1
     @GetMapping("/{id}")

@@ -165,7 +165,7 @@ public class PaypalService {
                 Order order = persistOrder(createdPayment, username);
                 response.put("status", "success");
                 //response.put("payment", createdPayment.toJSON());
-                response.put("orderId", order.getId());
+                response.put("order", order);
             }
         } catch (PayPalRESTException e) {
             System.err.println(e.getDetails());
