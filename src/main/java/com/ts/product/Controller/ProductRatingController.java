@@ -29,7 +29,7 @@ public class ProductRatingController {
         return productRatingRepository.findProductRatingByProductId(productId);
     }
 
-    @PostMapping(path="/add/{pid}", headers = "Content-Type=application/json") // Map ONLY GET Requests
+    @PostMapping(path="/add/{productId}", headers = "Content-Type=application/json") // Map ONLY GET Requests
     public ResponseEntity addNewProduct (@PathVariable Long productId, @RequestBody ProductRating productRating, Principal principal) {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isPresent()) {
