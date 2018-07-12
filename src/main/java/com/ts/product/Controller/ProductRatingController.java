@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,17 @@ public class ProductRatingController {
         if (product.isPresent()) {
             productRating.setProduct(product.get());
             productRatingRepository.save(productRating);
-            return new ResponseEntity<>(productRating, HttpStatus.CREATED);
+
+            // Get the average of all ratings so the front end can update
+            Double average = product.get().getRating();
+
+            // Return the rating created and the updated average
+            HashMap<String, Object> returnVals = new HashMap<>();
+            returnVals.put("rating", productRating);
+            returnVals.put("average", average);
+
+
+            return new ResponseEntity<>(returnVals, HttpStatus.CREATED);
         }
         return ResponseEntity.notFound().build();
     }

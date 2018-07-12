@@ -206,7 +206,7 @@ public class PaypalService {
 
         order.setUsername(username);
 
-        order.setStatus("New");
+        order.setStatus("Awaiting Shipment");
 
         order.setComments(newPayment.getTransactions().get(0).getNoteToPayee());
 
