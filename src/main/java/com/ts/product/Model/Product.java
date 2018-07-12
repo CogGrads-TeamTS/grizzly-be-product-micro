@@ -50,7 +50,7 @@ public class Product extends ProductSuperClass {
     public Double getRating() {
 
         // Avoid null pointer on product add
-        if(this.ratings.size() == 0) return 0.0;
+        if(this.ratings == null || this.ratings.size() == 0) return 0.0;
 
         Double average = 0.00;
         Double total = 0.00;

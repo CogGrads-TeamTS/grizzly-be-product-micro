@@ -82,7 +82,7 @@ public class ProductController {
 
     @PostMapping(path="/add")
     public ResponseEntity addNewProduct (@RequestParam String name, @RequestParam String description, @RequestParam String brand,
-                                         @RequestParam Float price, @RequestParam int catId, @RequestParam int discount, @RequestParam int rating) {
+                                         @RequestParam Float price, @RequestParam int catId, @RequestParam int discount) {
 
         Product product = new Product();
         product.setName(name);
@@ -91,6 +91,7 @@ public class ProductController {
         product.setPrice(price);
         product.setCatId(catId);
         product.setDiscount(discount);
+//        product.setRatings(new Rat);
         productRepository.save(product);
 
         return new ResponseEntity<>(productService.assignCategory(product), HttpStatus.CREATED);
